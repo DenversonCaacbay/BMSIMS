@@ -1,0 +1,284 @@
+/* Google Font Link */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+body {
+    background: #f8f9fb;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: "Poppins" , sans-serif;
+  }
+   .vertical-nav {
+    min-width: 17rem;
+    width: 17rem;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin-top: 0px;
+    padding: 10px 10px;
+    background: #27329b ;
+  
+    transition: all 0.4s;
+  }
+  .header{
+    color: #27329b;
+    font-size: 3vh;
+    font-weight: 600;
+    
+  }
+
+  .top-header{
+    margin-left: 120px;
+  }
+  .align{
+    background: #27329b;
+    color:white;
+  }
+  .card{
+    border-radius: 10px;
+    border: none;
+  }
+  .card-dash{
+    margin-top:10px;
+    width:100%;
+    border: none;
+    max-height: 100px;
+  }
+
+  .card-text{
+    font-size: 18px;
+  }
+  .page-content {
+    width: calc(100% - 17rem);
+    margin-left: 17rem;
+    transition: all 0.4s;
+  } 
+  
+  #sidebar.active {
+    margin-left: -17rem;
+  }
+  
+  #content.active {
+    width: 100%;
+    margin: 0;
+  
+  }
+  
+  .separator {
+    /*border-bottom: 1px dashed #fff;*/
+  }
+  
+  .text-uppercase {
+    letter-spacing: 0.1em;
+  }
+  .text-gray {
+    color: #fff;
+  }
+
+  .nav-link{
+      text-transform: capitalize;
+  }
+  .nav-link:hover{
+    color:#fff;
+      background:#5c6dc9;
+      border-radius: 10px;
+      
+  }
+
+  .nav-link1{
+    color:#fff;
+    background:#5c6dc9;
+    border-radius: 10px;
+  }
+  .hover-dark{
+    background:#5c6dc9;
+    border-radius: 10px;
+    color: #fff;
+  }
+  .text-primary{
+      color:#fcdc5c !important;
+  }
+  @media (max-width: 768px) {
+    #sidebar {
+      margin-left: -17rem;
+    }
+    #sidebar.active {
+      margin-left: 0;
+    }
+    #content {
+      width: 100%;
+      margin: 0;
+    }
+    #content.active {
+      margin-left: 17rem;
+      width: calc(100% - 17rem);
+    }
+  }
+  
+  
+  .card {
+    
+    box-shadow: 0 8px 22px rgba(0,0,0,0.1);
+    border: 2px #27329b solid;
+  }
+
+  .card-title{
+    font-size: 18px;
+  }
+
+  .input-group-text{
+    width:30%;
+  }
+  .custom{
+    width:100%;
+  }
+  .customfile::-webkit-file-upload-button{
+    background-color: #27329b;
+    color: #fff;
+    border-radius: 0px;
+    border: none;
+    padding: 10px;
+  }
+
+  .fa{
+    font-size: 20px;
+  }
+
+  /*Manage Program*/
+.uk-timeline .uk-timeline-item .uk-card {
+	max-height: 300px;
+    border-radius: 10px;
+}
+
+.uk-timeline .uk-timeline-item {
+    display: flex;
+    position: relative;
+}
+
+.uk-timeline .uk-timeline-item::before {
+    background: #dadee4;
+    content: "";
+    height: 100%;
+    left: 19px;
+    position: absolute;
+    top: 20px;
+    width: 2px;
+		z-index: -1;
+}
+
+.uk-timeline .uk-timeline-item .uk-timeline-icon .uk-badge {
+		margin-top: 20px;
+    width: 40px;
+    height: 40px;
+}
+
+.uk-timeline .uk-timeline-item .uk-timeline-content {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 0 0 0 1rem;
+}
+
+.datetime {
+  font-size: 12px;
+  padding: 5px;
+  color: #ffffff;
+  /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);*/
+  border-radius: 4px;
+  background: #f8f9fb;
+  /*border-right: 10px #3B71CA solid;*/
+  width: 350px;
+  font-weight: 500;
+  font-family: "Inter", sans-serif;
+}
+
+.time {
+  font-size: 16px;
+  color: #27329b;
+}
+
+.date {
+  margin-left: 5px;
+  font-size: 16px;
+  color: #121212;
+}
+
+.btn-menu{
+  margin-left: 10px;
+  height: 50px;
+  width:50px;
+  border-radius: 50px;
+  background-color: #27329b;
+  color:#fff;
+}
+
+.btn-menu:hover{
+  color:#fff;
+}
+
+.btn-custom {
+  background-color: #27329b;
+  color:#fff;
+  border: none;
+}
+.btn-custom:hover {
+  background-color: #fff;
+  color:#27329b;
+  border: none;
+}
+.dropdown a{
+  margin-right: 10px;
+  color:#5c6dc9;
+}
+
+.fas{
+  font-size: 20px;
+  color:#27329b;
+}
+
+.btn-width {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.card-header {
+  background: #27329b;
+  color:#fff;
+  font-size: 15px;
+  height: 40px;
+}
+
+.card-header h5{
+  color:#fff;
+  font-size: 15px;
+}
+.nav1{
+  margin:0.5px;
+}
+.table{
+  border-collapse: collapse;
+  width: 100%;
+}
+.table th{
+  background-color: #27329b;
+  color:white;
+}
+.table  tr:nth-child(even){background-color: #f2f2f2;}
+
+.user-style{
+  text-decoration: none;
+  font-size: 18px;
+  margin-left: 10px;
+  color: #27329b;
+}
+.form-control{
+  height:50px;
+}
+.form-control:focus{
+  border: none;
+  border-bottom:3px #27329b solid;
+
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+

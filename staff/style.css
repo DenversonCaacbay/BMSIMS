@@ -1,0 +1,19 @@
+
+
+.sticky th{
+  position: sticky;
+  top:0;
+}
+
+.table-responsive::-webkit-scrollbar {
+  display: none;
+}
+
+.card-req{
+  padding: 5px;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0px 5px 10px rgb(34, 32, 32,0.2),
+  0px 5px 10px rgba(0,0,0,0.1);
+}
