@@ -8,29 +8,26 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }                   
 ?>
 <?php
-                            $pdo = require '../sql/config/connection.php';
-                            $displayform = false;
-                            $displaylogin = false;
-
-                            $sqlAdmin = "SELECT * FROM feedbacks";
-                            $statement = $pdo->query($sqlAdmin);
-                            $admin = $statement->fetchAll(PDO::FETCH_ASSOC);
-                            $admin_count = $statement->rowCount();
-
-                            if ($admin_count < 1) {
-                                $displayform = true;
-                            } else {
-                                $displaylogin = true;
-                            }
-
-                            // Check if there is an email in the feedbacks table
-                            foreach ($admin as $row) {
-                                if (!empty($row['email'])) {
-                                    $displayform = false;
-                                    break;
-                                }
-                            }
-                            ?>
+    $pdo = require '../sql/config/connection.php';
+    // $displayform = false;
+    // $displaylogin = false;
+    // $sqlAdmin = "SELECT * FROM feedbacks";
+    // $statement = $pdo->query($sqlAdmin);
+    // $admin = $statement->fetchAll(PDO::FETCH_ASSOC);
+    // $admin_count = $statement->rowCount();
+    // if ($admin_count < 1) {
+    //     $displayform = true;
+    // } else {
+    //     $displaylogin = true;
+    // }
+    // // Check if there is an email in the feedbacks table
+    // foreach ($admin as $row) {
+    //     if (!empty($row['email'])) {
+    //         $displayform = false;
+    //         break;
+    //     }
+    // }
+    ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -190,9 +187,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                         <button class="btn btn-custom" data-toggle="modal" data-target="#profilemodal">Edit Profile</button>
                         <button class="btn btn-custom" data-toggle="modal" data-target="#passmodal">Change Password</button>
                         
-                        <?php if ($displayform): ?>
+                        <!-- <?php if ($displayform): ?>
                             <button class="btn btn-custom" data-toggle="modal" data-target="#feedmodal">Feedback</button>
-                        <?php endif; ?>
+                        <?php endif; ?> -->
                         
                     </div>
                     
@@ -270,7 +267,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </div>
         </div>
 
-        <div class="modal fade" id="feedmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <!-- <div class="modal fade" id="feedmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -290,7 +287,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
     
 </div>

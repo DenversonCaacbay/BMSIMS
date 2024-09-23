@@ -1,5 +1,5 @@
 <?php
-require '../sql/auth/account_check2.php';
+// require '../sql/auth/account_check2.php';
 // require '../sql/auth/account_user_check.php'; 
 session_start(); // Start the session
 

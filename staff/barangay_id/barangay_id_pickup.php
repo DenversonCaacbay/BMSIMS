@@ -8,9 +8,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 ?>
 <?php
 $host = 'localhost';
-$db = 'u622464203_bmsims';
-$user = 'u622464203_bmsims';
-$pass = 'Bmsims2023';
+$db = 'bmsims';
+$user = 'root';
+$pass = '';
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

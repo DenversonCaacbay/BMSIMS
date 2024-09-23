@@ -105,8 +105,7 @@
 <?php
 
 
-$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
-
+$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
 $page_array=array(); 
 $limit = '10000000';
 $page = 1;

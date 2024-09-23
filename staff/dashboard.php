@@ -3,9 +3,9 @@ require '../sql/auth/account_staff_check.php';
 
 // Database connection details
 $servername = "localhost";
-$username = "u622464203_bmsims";
-$password = "Bmsims2023";
-$dbname = "u622464203_bmsims";
+$username = "root";
+$password = "";
+$dbname = "bmsims";
 
 // Create a connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -34,9 +34,9 @@ $conn->close();
 
 <?php
 $servername = "localhost";
-$username = "u622464203_bmsims";
-$password = "Bmsims2023";
-$dbname = "u622464203_bmsims";
+$username = "root";
+$password = "";
+$dbname = "bmsims";
 
 // Create a connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -91,9 +91,9 @@ foreach ($data as $row) {
 
 <?php
 $host = 'localhost';
-$db = 'u622464203_bmsims';
-$user = 'u622464203_bmsims';
-$pass = 'Bmsims2023';
+$db = 'bmsims';
+$user = 'root';
+$pass = '';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
