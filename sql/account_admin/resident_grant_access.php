@@ -7,42 +7,42 @@
     $pdo = require '../config/connection.php';
 
     $data = [
-        'acc_id' => 1,
-        'admin_power' => 'zzz',
+        'res_id' => 1,
+        'access' => 'zzz',
     ];
 
-    $sql = "UPDATE tbl_resident SET admin_power= :admin_power WHERE firstname = :firstname";
-    $sql2 = 'INSERT INTO tbl_logs_resident(firstname,lastname, admin_power) VALUES ( :firstname,:lastname ,:admin_power)';
+    $sql = "UPDATE resident_accounts SET access= :access WHERE fname = :fname";
+    // $sql2 = 'INSERT INTO tbl_logs_resident(fname,lname, admin_power) VALUES ( :firstname,:lastname ,:admin_power)';
 
     $statement = $pdo->prepare($sql);
 
-    $statement->bindParam(':firstname', $data['firstname']);
-    $statement->bindParam(':admin_power', $data['admin_power']);
+    $statement->bindParam(':fname', $data['fname']);
+    $statement->bindParam(':access', $data['access']);
 
     //change
-    $data['firstname'] = $_POST['firstname'];
-    $data['admin_power'] = $_POST['admin_power'];
+    $data['fname'] = $_POST['fname'];
+    $data['access'] = $_POST['access'];
 
-    $statement2 = $pdo->prepare($sql2);
+    // $statement2 = $pdo->prepare($sql2);
 
-    $newProd2 = [
-        'firstname' => 'zzz',
-        'lastname' => 'zzz',
-        'admin_power' => 'zzz',
-    ];
+    // $newProd2 = [
+    //     'firstname' => 'zzz',
+    //     'lastname' => 'zzz',
+    //     'admin_power' => 'zzz',
+    // ];
 
 
-    $statement2->bindParam(':firstname', $newProd2['firstname']);
-    $statement2->bindParam(':lastname', $newProd2['lastname']);
-    $statement2->bindParam(':admin_power', $newProd2['admin_power']);
+    // $statement2->bindParam(':firstname', $newProd2['firstname']);
+    // $statement2->bindParam(':lastname', $newProd2['lastname']);
+    // $statement2->bindParam(':admin_power', $newProd2['admin_power']);
 
-    //change
+    // //change
 
-    $newProd2['firstname'] = $_POST['firstname'];
-    $newProd2['lastname'] = $_POST['lastname'];
-    $newProd2['admin_power'] = $_POST['admin_power'];
+    // $newProd2['firstname'] = $_POST['firstname'];
+    // $newProd2['lastname'] = $_POST['lastname'];
+    // $newProd2['admin_power'] = $_POST['admin_power'];
 
-    if($statement->execute() && $statement2->execute()){
+    if($statement->execute()){
         echo'
         <script type="text/javascript">
         $(document).ready(function(){
@@ -53,7 +53,7 @@
             showConfirmButton: false,
             timer: 1500
         }, function(){
-            window.location.href="../../admin/resident_accounts.php";
+            window.location.href="../../admin/approved_accounts.php";
         })
         });
         </script>';
@@ -70,7 +70,7 @@
             showConfirmButton: false,
             timer: 1500
         }, function(){
-            window.location.href="../../admin/resident_accounts.php";
+            window.location.href="../../admin/approved_accounts.php";
         })
         });    
         </script>';

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <title>BMSIMS</title>
+
 </head>
 
 <body>
@@ -48,7 +49,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" style="cursor:pointer;" href="user/user_index.php" target="_blank">
+                            <a class="nav-link" style="cursor:pointer;" href="user/user_index.php">
                                Resident
                             </a>
                         </li>
@@ -94,7 +95,7 @@
                 <div class="card card-2">
                     <div class="card-title">
                     
-                    <div class="icon1"><img src="https://img.icons8.com/bubbles/100/null/document.png"/></div>
+                    <div class="icon1"><img src="https://img.icons8.com/pulsar-color/96/null/documents.png"/></div>
                         <p class="text-center">Variety</p>
                     </div>
                 </div>
@@ -103,7 +104,7 @@
                 <div class="card card-2">
                     <div class="card-title">
                     
-                    <div class="icon1"><img src="https://img.icons8.com/bubbles/100/null/easy.png"/></div>
+                    <div class="icon1"><img src="https://img.icons8.com/pulsar-color/96/null/easy.png"/></div>
                         <p class="text-center">Convenient</p>
                     </div>
                 </div>
@@ -112,7 +113,7 @@
                 <div class="card card-2">
                     <div class="card-title">
                     
-                    <div class="icon1"><img src="https://img.icons8.com/bubbles/100/null/crowd--v2.png"/></div>
+                    <div class="icon1"><img src="https://img.icons8.com/pulsar-color/96/null/conference-call.png"/></div>
                         <p class="text-center">No more long lines!</p>
                     </div>
                 </div>
@@ -121,7 +122,7 @@
                 <div class="card card-2">
                     <div class="card-title">
                     
-                    <div class="icon1"><img src="https://img.icons8.com/bubbles/100/null/trust.png"/></div>
+                    <div class="icon1"><img src="https://img.icons8.com/pulsar-color/96/null/trust.png"/></div>
                         <p class="text-center">We value your safety</p>
                     </div>
                 </div>
@@ -155,8 +156,20 @@
   </section>
   <!-- End About Section -->
 
+    <!-- About Section -->
+    <!-- <section id="about">
+    <div class="about container1">
+        <div class="row" style="width:99%;">
+            Feedbacks
+            
+        </div>
+    </div>
+  </section> -->
+  <!-- End About Section -->
+
   <!-- Contact Section -->
-  <section id="contact">
+<!-- Contact Section -->
+<section id="contact">
     <div class="contact container1" style="width:100%">
       <div>
         <h1 class="section-title">Contact <span>info</span></h1>
@@ -165,29 +178,29 @@
             <div class="col-4 con">
                 <div class="card card-2">
                     <div class="card-title">
-                    <div class="icon"><img src="https://img.icons8.com/bubbles/100/000000/new-post.png" /></div>
+                    <div class="icon"><img src="https://img.icons8.com/pulsar-color/96/null/secured-letter.png"/></div>
                         <p class="text-center">Email</p>
                     </div>
                     <div class="card-body">
-                        <p class="text-center">sampleemail@gmail.com</p>
+                        <p class="text-center">barangaymatainsims@gmail.com</p>
                     </div>
                 </div>
             </div>
             <div class="col-4 con">
                 <div class="card card-2">
                     <div class="card-title">
-                    <div class="icon"><img src="https://img.icons8.com/bubbles/100/000000/phone.png" /></div>
+                    <div class="icon"><img src="https://img.icons8.com/pulsar-color/96/null/phone-disconnected.png"/></div>
                         <p class="text-center">Contact Number</p>
                     </div>
                     <div class="card-body">
-                        <p class="text-center">+639123456789</p>
+                        <p class="text-center">+639816787835</p>
                     </div>
                 </div>
             </div>
             <div class="col-4 con">
                 <div class="card card-2">
                     <div class="card-title">
-                    <div class="icon"><img src="https://img.icons8.com/bubbles/100/000000/map-marker.png" /></div>
+                    <div class="icon"><img src="https://img.icons8.com/pulsar-color/96/null/marker.png"/></div>
                         <p class="text-center">Address</p>
                     </div>
                     <div class="card-body">
@@ -209,21 +222,10 @@
   </section>
   <!-- End Footer -->
   
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></scrip>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
-    <script>
-        const passwordInput = document.querySelector("#password")
-        const eye = document.querySelector("#eye")
-
-        eye.addEventListener("click", function(){
-        this.classList.toggle("fa-eye-slash")
-        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password"
-        passwordInput.setAttribute("type", type)
-        })
-    </script>
 </body>
 
 </html>

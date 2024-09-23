@@ -1,0 +1,25 @@
+<!-- pdf_viewer.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF Viewer</title>
+    <script>
+        window.onload = function() {
+            // Get the req_id from the URL query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const reqId = urlParams.get('id');
+            
+            // Set the PDF URL with the req_id
+            const pdfUrl = "generate_clearance.php?pdf=1&id=" + reqId;
+            
+            // Embed the PDF within the page
+            document.getElementById('pdfContainer').innerHTML = '<embed src="' + pdfUrl + '" width="800px" height="600px" type="application/pdf" />';
+        }
+    </script>
+</head>
+<body>
+    <h1>PDF Viewer</h1>
+    hi
+    <div id="pdfContainer"></div>
+</body>
+</html>

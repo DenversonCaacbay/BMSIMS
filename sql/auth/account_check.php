@@ -4,7 +4,7 @@
 
     //redirects user if login session is empty
     if(empty($usernameCheck)){
-        header("Location: ../admin/index.php");
+        header("Location: ../admin_index.php");
         // echo "session: ".$usernameCheck;
     }
 ?>

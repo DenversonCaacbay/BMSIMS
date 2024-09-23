@@ -1,5 +1,18 @@
 <?php
-require '../sql/auth/account_user_check.php';                     
+// require '../sql/auth/account_user_check.php'; 
+
+session_start(); // Start the session
+// session_destroy();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Redirect the user to user_index.php
+    header("Location: user_index.php");
+    exit;
+}
+// Check if user is not logged in, redirect to login.php
+// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+//     header('Location: user_index.php');
+//     exit;
+// }                    
 ?>
 <!DOCTYPE html>
 <html>
@@ -7,7 +20,7 @@ require '../sql/auth/account_user_check.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="../images/loginimage.png">
-    <title>BMSIMS | My Requests</title>
+    <title>BMSIMS | Requests</title>
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="../bootstrap/js/bootstrap.min.js"></script>
@@ -17,14 +30,29 @@ require '../sql/auth/account_user_check.php';
       integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc"
       crossorigin="anonymous"
     />
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 </head>
 <style>
-  .myDiv{
-  display:N/A;
-}  
+    .myDiv{
+        display:N/A;
+    }  
+    .myDiv1{
+        display:none;
+    }  
+    .row-eq-height .card {
+      margin-bottom: 20px;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+      transition: box-shadow 0.3s;
+    }
+    .row-eq-height .card-body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .row-eq-height .card-content {
+      flex-grow: 1;
+    }
+ 
 </style>
 
 
@@ -32,7 +60,7 @@ require '../sql/auth/account_user_check.php';
 <nav class="navbar navbar-expand-lg py-3 sticky-top navbar-dark">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <img src="../images/BarangayLogo.png" height="30" class="d-inline-block align-text-top" style="border-radius:30px;">
+            <img src="../images/barangaylogo.png" height="30" class="d-inline-block align-text-top" style="border-radius:30px;">
             Barangay Matain SIMS
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -68,7 +96,6 @@ require '../sql/auth/account_user_check.php';
                     <button type="button" class="btn btn-cancel" data-dismiss="modal"> X </button>
                 </div>
                 <form action="../sql/post/insert_clearance.php" method="POST" enctype="multipart/form-data">
-
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-12 come">
@@ -78,7 +105,7 @@ require '../sql/auth/account_user_check.php';
                         </div>
                         <div class="col-md-12" hidden>
                             <label>Full Name</label>
-                            <input type="text" name="fullname" class="form-control" value="<?php echo $_SESSION['firstname']." ".$_SESSION['middlename']." ".$_SESSION['lastname'] ?>" placeholder="text" id="floatingInput"   >
+                            <input type="text" name="fullname" class="form-control" value="<?php echo $_SESSION['fname']." ".$_SESSION['mname']." ".$_SESSION['lname'] ?>" placeholder="text" id="floatingInput"   >
                         </div>
                         <div class="col-md-12" hidden>
                             <label>Request</label>
@@ -86,15 +113,33 @@ require '../sql/auth/account_user_check.php';
                         </div>
                         <div class="col-md-12 mb-3 form-group">
                             <label>Purpose</label>
-                            <select style="padding:13px" class="form-control form-select" name="purpose" required>
+                            <select style="padding:13px" class="form-control form-select" name="purpose" id="myselection6" required>
                                 <option selected></option>
                                 <option value="Getting A Job">Getting a Job</option>
-                                <option value="Opening Back Account">Opening Bank Account</option>
+                                <option value="Opening Bank Account">Opening Bank Account</option>
                                 <option value="Applying for another ID">Applying for another ID</option>
                                 <option value="For School">For School</option>
+                                <option value="Other">Others</option>
                             </select>
                         </div>
+                        <div class="col-md-12 mt-3 mb-3" hidden>
+                            <label>Name *Contact Incase of Emergency</label>
+                            <input type="text" name="notify" class="form-control" placeholder="" value="N/A" required>
+                        </div>
+                        <div class="col-md-12 mt-3 mb-3" hidden>
+                            <label>Address</label>
+                            <input type="text" name="address" class="form-control"  value="N/A" required>
+                        </div>
+                        <div class="col-md-12 mb-3" hidden>
+                            <label>Contact</label>
+                            <input type="text" name="contact" class="form-control"  value="N/A" required>
+                        </div>
+                        <div id="showOther" class="myDiv1">
 
+                            <div class="col-md-12 mt-3 mb-3">
+                                <input type="text" name="purpose1" class="form-control">
+                            </div>
+                        </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label></label>
                             <input type="text" name="date_open" class="form-control"  value="N/A" required>
@@ -103,27 +148,13 @@ require '../sql/auth/account_user_check.php';
                             <label></label>
                             <input type="text" name="date_close" class="form-control"  value="N/A" required>
                         </div>
-
                         <div class="col-md-12">
                             <label>Get Date</label>
                             <input type="date" name="get_date" class="form-control" value="" placeholder="text"  id="txtDate" required  >
                         </div>
-
-                        <!-- <div class="col-md-12 form-group">
-                            <label>Get Request From Monday to Friday</label>
-                            <select style="padding:13px" class="form-control form-select" name="get_date" required>
-                                <option selected></option>
-                                <option value="Monday">Monday</option>
-                                <option value="Tuesday">Tuesday</option>
-                                <option value="Wednesday">Wednesday</option>
-                                <option value="Thursday">Thursday</option>
-                                <option value="Friday">Friday</option>
-                            </select>
-                        </div> -->
-
                         <div class="col-md-12 form-group mt-3">
                             <label>Mode Of Payment</label>
-                            <select style="padding:13px" class="form-control form-select" name="payment_method" id="myselection" required>
+                            <select style="padding:13px" class="form-control form-select" name="payment_method" id="paymentselection" required>
                                 <option selected></option>
                                 <option value="Pick Up">Pick Up</option>
                                 <option value="Gcash">Gcash</option>
@@ -160,15 +191,15 @@ require '../sql/auth/account_user_check.php';
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label>Payment Status</label>
-                            <input type="text" name="payment_status" class="form-control" value="Checking" value="Please Wait">
+                            <input type="text" name="payment_status" class="form-control" value="Pending">
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label>Request Status</label>
-                            <input type="text" name="request_status" class="form-control" value="Please Wait">
+                            <input type="text" name="request_status" class="form-control" value="Pending">
                         </div>
                         <div class="col-md-12" hidden>
-                            <label>User Name</label>
-                            <input type="text" name="username" class="form-control" value="<?php echo $_SESSION['username']?>" placeholder="text" id="floatingInput"   >
+                            <label>Email</label>
+                            <input type="text" name="email" class="form-control" value="<?php echo $_SESSION['email']?>" placeholder="text" id="floatingInput"   >
                         </div>
                             </div>
                         </div>
@@ -205,40 +236,40 @@ require '../sql/auth/account_user_check.php';
                         </div>
                         <div class="col-md-12" hidden>
                             <label>Full Name</label>
-                            <input type="text" name="fullname" class="form-control" value="<?php echo $_SESSION['firstname']." ".$_SESSION['middlename']." ".$_SESSION['lastname'] ?>" placeholder="text" id="floatingInput"   >
+                            <input type="text" name="fullname" class="form-control" value="<?php echo $_SESSION['fname']." ".$_SESSION['mname']." ".$_SESSION['lname'] ?>" placeholder="text" id="floatingInput"   >
                         </div>
                         <div class="col-md-12" hidden>
-                            <label>Request</label>
-                            <input type="text" name="request_type" class="form-control" value="Barangay ID" placeholder="text" id="floatingInput"  >
+                            <label>Request Type</label>
+                            <input type="text" name="request_type" class="form-control" value="Barangay ID" placeholder="text" id="floatingInput"   >
                         </div>
-
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label>Purpose</label>
-                            <input type="text" name="purpose" class="form-control" placeholder="Purpose"  value="N/A"   required>
+                            <input type="text" name="purpose" class="form-control" placeholder="" value="N/A" required>
+                        </div>
+                        <div class="col-md-12 mt-3 mb-3">
+                            <label>Name *Contact Incase of Emergency</label>
+                            <input type="text" name="notify" class="form-control" placeholder="" value="" required>
+                        </div>
+                        <div class="col-md-12 mt-3 mb-3">
+                            <label>Address</label>
+                            <input type="text" name="address" class="form-control"  value="" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label>Contact</label>
+                            <input type="text" name="contact" class="form-control"  value="" required>
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label></label>
-                            <input type="text" name="date_open" class="form-control"  value="N/A"   required>
+                            <input type="text" name="date_open" class="form-control"  value="N/A" required>
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label></label>
-                            <input type="text" name="date_close" class="form-control"  value="N/A"   required>
+                            <input type="text" name="date_close" class="form-control"  value="N/A" required>
                         </div>
                         <div class="col-md-12">
                             <label>Get Date</label>
-                            <input type="date" name="get_date" class="form-control" value="" placeholder="text"  id="txtDate" required  >
+                            <input type="date" name="get_date" class="form-control" value="" id="txtDate" required>
                         </div>
-                        <!-- <div class="col-md-12 form-group">
-                            <label>Get Request From Monday to Friday</label>
-                            <select style="padding:13px" class="form-control form-select" name="get_date" required>
-                                <option selected></option>
-                                <option value="Monday">Monday</option>
-                                <option value="Tuesday">Tuesday</option>
-                                <option value="Wednesday">Wednesday</option>
-                                <option value="Thursday">Thursday</option>
-                                <option value="Friday">Friday</option>
-                            </select>
-                        </div> -->
                         <div class="col-md-12 mt-3 form-group">
                             <label>Mode Of Payment</label>
                             <select style="padding:13px;" class="form-control form-select" name="payment_method" id="myselection1" required>
@@ -275,15 +306,15 @@ require '../sql/auth/account_user_check.php';
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label>Payment Status</label>
-                            <input type="text" name="payment_status" class="form-control" value="Checking">
+                            <input type="text" name="payment_status" class="form-control" value="Pending">
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label></label>
-                            <input type="text" name="request_status" class="form-control" value="Please Wait" required>
+                            <input type="text" name="request_status" class="form-control" value="Pending" required>
                         </div>
                         <div class="col-md-12" hidden >
-                            <label>User Name</label>
-                            <input type="text" name="username" class="form-control" value="<?php echo $_SESSION['username']?>" placeholder="text" id="floatingInput"   >
+                            <label>Email</label>
+                            <input type="text" name="email" class="form-control" value="<?php echo $_SESSION['email']?>" placeholder="text" id="floatingInput">
                         </div>
 
                     </div>
@@ -318,7 +349,7 @@ require '../sql/auth/account_user_check.php';
                         </div>
                         <div class="col-md-12" hidden>
                             <label>Full Name</label>
-                            <input type="text" name="fullname" class="form-control" value="<?php echo $_SESSION['firstname']." ".$_SESSION['middlename']." ".$_SESSION['lastname'] ?>" placeholder="text" id="floatingInput"   >
+                            <input type="text" name="fullname" class="form-control" value="<?php echo $_SESSION['fname']." ".$_SESSION['mname']." ".$_SESSION['lname'] ?>" placeholder="text" id="floatingInput"   >
                         </div>
                         <div class="col-md-12" hidden>
                             <label>Request</label>
@@ -331,6 +362,18 @@ require '../sql/auth/account_user_check.php';
                                 <option value="Financial">Financial</option>
                                 <option value="Educational">Educational</option>
                             </select>
+                        </div>
+                        <div class="col-md-12 mt-3 mb-3" hidden>
+                            <label>Name *Contact Incase of Emergency</label>
+                            <input type="text" name="notify" class="form-control" placeholder="" value="N/A" required>
+                        </div>
+                        <div class="col-md-12 mt-3 mb-3" hidden>
+                            <label>Address</label>
+                            <input type="text" name="address" class="form-control"  value="N/A" required>
+                        </div>
+                        <div class="col-md-12 mb-3" hidden>
+                            <label>Contact</label>
+                            <input type="text" name="contact" class="form-control"  value="N/A" required>
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label></label>
@@ -357,7 +400,7 @@ require '../sql/auth/account_user_check.php';
                         </div> -->
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label></label>
-                            <input type="text" name="payment_method" class="form-control"  value="N/A" required>
+                            <input type="text" name="payment_method" class="form-control"  value="Pick Up" required>
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label></label>
@@ -373,16 +416,16 @@ require '../sql/auth/account_user_check.php';
                             </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label></label>
-                            <input type="text" name="payment_status" class="form-control"  value="N/A" required>
+                            <input type="text" name="payment_status" class="form-control"  value="Pending" required>
                         </div>
                         
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label></label>
-                            <input type="text" name="request_status" class="form-control" value="Please Wait" required>
+                            <input type="text" name="request_status" class="form-control" value="Pending" required>
                         </div>
                         <div class="col-md-12" hidden >
-                            <label>User Name</label>
-                            <input type="text" name="username" class="form-control" value="<?php echo $_SESSION['username']?>" placeholder="text" id="floatingInput"   >
+                            <label>Email</label>
+                            <input type="text" name="email" class="form-control" value="<?php echo $_SESSION['email']?>" placeholder="text" id="floatingInput"   >
                         </div>
 
                     </div>
@@ -417,7 +460,7 @@ require '../sql/auth/account_user_check.php';
                         </div>
                         <div class="col-md-12" hidden >
                             <label>Full Name</label>
-                            <input type="text" name="fullname" class="form-control" value="<?php echo $_SESSION['firstname']." ".$_SESSION['middlename']." ".$_SESSION['lastname'] ?>" placeholder="text" id="floatingInput"   >
+                            <input type="text" name="fullname" class="form-control" value="<?php echo $_SESSION['fname']." ".$_SESSION['mname']." ".$_SESSION['lname'] ?>" placeholder="text" id="floatingInput"   >
                         </div>
                         <div class="col-md-12" hidden>
                             <label>Request</label>
@@ -427,6 +470,18 @@ require '../sql/auth/account_user_check.php';
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label>Purpose</label>
                             <input type="text" name="purpose" class="form-control" placeholder="Purpose"  value="N/A" required>
+                        </div>
+                        <div class="col-md-12 mt-3 mb-3" hidden>
+                            <label>Name *Contact Incase of Emergency</label>
+                            <input type="text" name="notify" class="form-control" placeholder="" value="N/A" required>
+                        </div>
+                        <div class="col-md-12 mt-3 mb-3" hidden>
+                            <label>Address</label>
+                            <input type="text" name="address" class="form-control"  value="N/A" required>
+                        </div>
+                        <div class="col-md-12 mb-3" hidden>
+                            <label>Contact</label>
+                            <input type="text" name="contact" class="form-control"  value="N/A" required>
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label></label>
@@ -488,15 +543,15 @@ require '../sql/auth/account_user_check.php';
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label>Payment Status</label>
-                            <input type="text" name="payment_status" class="form-control" value="Checking">
+                            <input type="text" name="payment_status" class="form-control" value="Pending">
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label>Request Status</label>
-                            <input type="text" name="request_status" class="form-control" value="Please Wait">
+                            <input type="text" name="request_status" class="form-control" value="Pending">
                         </div>
                         <div class="col-md-12" hidden>
-                            <label>User Name</label>
-                            <input type="text" name="username" class="form-control" value="<?php echo $_SESSION['username']?>" placeholder="text" id="floatingInput">
+                            <label>Email</label>
+                            <input type="text" name="email" class="form-control" value="<?php echo $_SESSION['email']?>" placeholder="text" id="floatingInput">
                         </div>
 
                     </div>
@@ -531,7 +586,7 @@ require '../sql/auth/account_user_check.php';
                         </div>
                         <div class="col-md-12" hidden>
                             <label>Full Name</label>
-                            <input type="text" name="fullname" class="form-control" value="<?php echo $_SESSION['firstname']." ".$_SESSION['middlename']." ".$_SESSION['lastname'] ?>" placeholder="text" id="floatingInput"   >
+                            <input type="text" name="fullname" class="form-control" value="<?php echo $_SESSION['fname']." ".$_SESSION['mname']." ".$_SESSION['lname'] ?>" placeholder="text" id="floatingInput"   >
                         </div>
                         <div class="col-md-12" hidden>
                             <label>Request</label>
@@ -542,9 +597,21 @@ require '../sql/auth/account_user_check.php';
                             <label>Purpose</label>
                             <input type="text" name="purpose" class="form-control" placeholder="Purpose"  value="N/A"   required>
                         </div>
+                        <div class="col-md-12 mt-3 mb-3" hidden>
+                            <label>Name *Contact Incase of Emergency</label>
+                            <input type="text" name="notify" class="form-control" placeholder="" value="N/A" required>
+                        </div>
+                        <div class="col-md-12 mt-3 mb-3" hidden>
+                            <label>Address</label>
+                            <input type="text" name="address" class="form-control"  value="N/A" required>
+                        </div>
+                        <div class="col-md-12 mb-3" hidden>
+                            <label>Contact</label>
+                            <input type="text" name="contact" class="form-control"  value="N/A" required>
+                        </div>
                         <div class="col-md-12 mt-3 mb-3">
-                            <label>Date Open</label>
-                            <input type="date" name="date_open" class="form-control" id="txtDate">
+                            <label>Store Name</label>
+                            <input type="text" name="date_open" class="form-control" id="txtDate">
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label>Date Closing</label>
@@ -567,12 +634,7 @@ require '../sql/auth/account_user_check.php';
                         </div> -->
                         <div class="col-md-12 mt-3 form-group">
                             <label>Mode Of Payment</label>
-                            <select style="padding:13px" class="form-control form-select" name="payment_method" id="myselection3">
-                                <option selected></option>
-                                <option value="Pick Up">Pick Up</option>
-                                <option value="Gcash3">Gcash</option>
-                                
-                            </select>
+                            <input type="text" name="payment_method" class="form-control" value="Pick Up" id="txtDate">
                         </div>
                         <div id="showGcash3" class="myDiv">
                             <div class="row">
@@ -601,15 +663,15 @@ require '../sql/auth/account_user_check.php';
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label>Payment Status</label>
-                            <input type="text" name="payment_status" class="form-control" value="Checking">
+                            <input type="text" name="payment_status" class="form-control" value="Pending">
                         </div>
                         <div class="col-md-12 mt-3 mb-3" hidden>
                             <label>Request Status</label>
-                            <input type="text" name="request_status" class="form-control" value="Please Wait"   required>
+                            <input type="text" name="request_status" class="form-control" value="Pending"   required>
                         </div>
                         <div class="col-md-12" hidden>
-                            <label>User Name</label>
-                            <input type="text" name="username" class="form-control" value="<?php echo $_SESSION['username']?>" placeholder="text" id="floatingInput"   >
+                            <label>Email</label>
+                            <input type="text" name="email" class="form-control" value="<?php echo $_SESSION['email']?>" placeholder="text" id="floatingInput"   >
                         </div>
 
                     </div>
@@ -625,118 +687,7 @@ require '../sql/auth/account_user_check.php';
         </div>
     </div>
 
-    <div class="modal fade" id="permitmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Request Form | Business Permit Renewal</h3>
-                    <button type="button" class="btn btn-cancel" data-dismiss="modal"> X </button>
-                </div>
 
-                <form action="../sql/post/insert_renewal.php" method="POST" enctype="multipart/form-data">
-
-                    <div class="modal-body">
-
-                    <div class="col-md-12 form-group mt-3 mb-3" hidden>
-                            <label>Date Requested</label>
-                            <input style="padding:13px;" class="form-control form-select" type="date" name="req_date" value="<?php echo date("Y-m-d"); ?>" required>
-                        </div>
-                        <div class="col-md-12" hidden>
-                            <label>Full Name</label>
-                            <input type="text" name="fullname" class="form-control" value="<?php echo $_SESSION['firstname']." ".$_SESSION['middlename']." ".$_SESSION['lastname'] ?>" placeholder="text" id="floatingInput"   >
-                        </div>
-                        <div class="col-md-12" hidden>
-                            <label>Request</label>
-                            <input type="text" name="request_type" class="form-control" value="Business Permit Renewal" placeholder="text" id="floatingInput"  >
-                        </div>
-
-                        <div class="col-md-12 mt-3 mb-3" hidden>
-                            <label>Purpose</label>
-                            <input type="text" name="purpose" class="form-control" placeholder="Purpose"  value="N/A"   required>
-                        </div>
-                        <div class="col-md-12 mt-3 mb-3" hidden>
-                            <label>Date Open</label>
-                            <input type="date" name="date_open" class="form-control" value="N/A">
-                        </div>
-                        <div class="col-md-12 mt-3 mb-3" hidden>
-                            <label>Date Renew</label>
-                            <input type="date" name="date_close" class="form-control"  value="<?php echo date("Y-m-d"); ?>">
-                        </div>
-
-                        <div class="col-md-12">
-                            <label>Get Date</label>
-                            <input type="date" name="get_date" class="form-control" value="" placeholder="text"  id="txtDate" required  >
-                        </div>
-                        <!-- <div class="col-md-12 form-group">
-                            <label>Get Request From Monday to Friday</label>
-                            <select style="padding:13px" class="form-control form-select" name="get_date" required>
-                                <option selected></option>
-                                <option value="Monday">Monday</option>
-                                <option value="Tuesday">Tuesday</option>
-                                <option value="Wednesday">Wednesday</option>
-                                <option value="Thursday">Thursday</option>
-                                <option value="Friday">Friday</option>
-                            </select>
-                        </div> -->
-                        <div class="col-md-12 mt-3 form-group">
-                            <label>Mode Of Payment</label>
-                            <select style="padding:13px;" class="form-control form-select" name="payment_method" id="myselection4" required>
-                                <option selected></option>
-                                <option value="Pick Up">Pick Up</option>
-                                <option value="Gcash4">Gcash</option>
-                                
-                            </select>
-                        </div>
-                        <div id="showGcash4" class="myDiv">
-                            <div class="row">
-                                <div class="col-7 mt-3">
-                                    <h3 class="title2" style="text-align:left">GCASH Details :</h3>
-                                    <h6>Leo Angelo Novo</h6>
-                                    <h6>09123456789</h6>
-                                    <h6>₱ 50.00</h6>
-                                </div>
-                                <div class="col-4">
-                                    <img class="qr" src="../images/gcash_qr.jpg" alt="gcash_qr" width="100">
-                                </div>
-                            </div>
-                            <div class="col-md-12 mt-3 mb-3">
-                                <label>Add Gcash Reference #</label>
-                                <input type="text" name="reference_no" class="form-control">
-                            </div>
-                            <div class="col-md-12 mt-3 mb-3" hidden>
-                                    <label>Enter Amount:</label>
-                                    <input type="number" name="amount" value="50" class="form-control">
-                            </div>
-                            <div class="col-md-12 form-group mb-3" hidden>
-                                <label>Date Paid</label>
-                                <input style="padding:13px;" class="form-control form-select" type="date" name="date_paid" value="<?php echo date("Y-m-d"); ?>" required>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mt-3 mb-3" hidden>
-                            <label>Payment Status</label>
-                            <input type="text" name="payment_status" class="form-control" value="Checking">
-                        </div>
-                        <div class="col-md-12 mt-3 mb-3" hidden>
-                            <label>Request Status</label>
-                            <input type="text" name="request_status" class="form-control" value="Please Wait"   required>
-                        </div>
-                        <div class="col-md-12" hidden>
-                            <label>User Name</label>
-                            <input type="text" name="username" class="form-control" value="<?php echo $_SESSION['username']?>" placeholder="text" id="floatingInput"   >
-                        </div>
-                    </div>
-
-
-
-                    <div class="modal-footer">
-                        <button type="submit" name="insertdata" class="btn btn-custom">Request</button>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
 
    
 <!--End of Modal Add-->
@@ -839,49 +790,58 @@ require '../sql/auth/account_user_check.php';
 
     <div class="container mt-5 mb-5">
     <h3 style="text-align:left">Request Forms</h3>
-        <div class="row">
-            <div class="col">
-                <div class="card">
+        <div class="row g-1 row-eq-height">
+            <div class="col-md-3">
+                <div class="card" id="card1">
                     <div class="card-body">
-                        <h5 class="card-title">Barangay Clearance</h5>
-                        <p class="card-text">₱50.00</p>
-                        <a href="#" class="btn btn-custom" data-toggle="modal" data-target="#clearancemodal">Request Form</a>
+                        <div class="card-content">
+                            <h5 class="card-title">Barangay Clearance</h5>
+                            <p class="card-text">₱50.00</p>
+                            <a href="#" class="btn btn-custom" data-toggle="modal" data-target="#clearancemodal">Request Form</a>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="card">
+            <div class="col-md-3">
+                <div class="card" id="card2">
                     <div class="card-body">
-                        <h5 class="card-title">Barangay Id</h5>
-                        <p class="card-text">₱50.00</p>
-                        <a href="#" class="btn btn-custom" data-toggle="modal" data-target="#idmodal">Request Form</a>
+                        <div class="card-content">
+                            <h5 class="card-title">Barangay Id</h5>
+                            <p class="card-text">₱50.00</p>
+                            <a href="#" class="btn btn-custom" data-toggle="modal" data-target="#idmodal">Request Form</a>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="card">
+            <div class="col-md-3">
+                <div class="card" id="card3">
                     <div class="card-body">
-                        <h5 class="card-title">Indigency</h5>
-                        <p class="card-text">N/A</p>
-                        <a href="#" class="btn btn-custom" data-toggle="modal" data-target="#indigencymodal">Request Form</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Residency</h5>
-                        <p class="card-text">₱50.00</p>
-                        <a href="#" class="btn btn-custom" data-toggle="modal" data-target="#residencymodal">Request Form</a>
-                    </div>
-                </div>
-            </div>
-            
+                        <div class="card-content">
+                            <h5 class="card-title">Indigency</h5>
+                            <p class="card-text">₱50.00</p>
+                            <a href="#" class="btn btn-custom" data-toggle="modal" data-target="#indigencymodal">Request Form</a>
+                        </div>
 
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card" id="card4">
+                    <div class="card-body">
+                        <div class="card-content">
+                            <h5 class="card-title">Residency</h5>
+                            <p class="card-text">₱50.00</p>
+                            <a href="#" class="btn btn-custom" data-toggle="modal" data-target="#residencymodal">Request Form</a>
+                        </div> 
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col">
-                <div class="card">
+                <div class="card" id="card5">
                     <div class="card-body">
                         <h5 class="card-title">Business Permit</h5>
                         <p class="card-text">₱50.00</p>
@@ -911,9 +871,7 @@ require '../sql/auth/account_user_check.php';
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <script src="main.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="../bootstrap/js/main.js"></script>
 
     <script>
         var dateControler = {
@@ -933,7 +891,7 @@ require '../sql/auth/account_user_check.php';
     </script>
     <script>
     $(document).ready(function(){
-        $('#myselection').on('change', function(){
+        $('#paymentselection').on('change', function(){
             var demovalue = $(this).val(); 
             $("div.myDiv").hide();
             $("#show"+demovalue).show();
@@ -981,6 +939,15 @@ require '../sql/auth/account_user_check.php';
         $('#myselection5').on('change', function(){
             var demovalue = $(this).val(); 
             $("div.myDiv").hide();
+            $("#show"+demovalue).show();
+        });
+    });
+    </script>
+    <script>
+    $(document).ready(function(){
+        $('#myselection6').on('change', function(){
+            var demovalue = $(this).val(); 
+            $("div.myDiv1").hide();
             $("#show"+demovalue).show();
         });
     });

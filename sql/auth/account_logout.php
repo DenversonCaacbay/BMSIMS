@@ -24,7 +24,9 @@
     session_destroy();
 
     echo 'Logging Out...';
-
-    header("Location: ../../admin/index.php");
+    header("Cache-Control: no-store, no-cache, must-revalidate");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    header("Location: ../../ad_index.php");
     exit();
 ?>

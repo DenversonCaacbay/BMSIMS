@@ -1,4 +1,12 @@
 
+<style>
+  .table {
+  overflow: hidden;
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.1);;
+}
+</style>
 <html>
   <!-- EDIT POP UP FORM (Bootstrap MODAL) -->
 
@@ -28,7 +36,7 @@
             </div>
         </div>
     </div>
- 
+  
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
       <script>
@@ -64,10 +72,10 @@
 <?php
 
 
-$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
+$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
 
 $page_array=array(); 
-$limit = '10000000';
+$limit = '5';
 $page = 1;
 if($_POST['page'] > 1)
 {
@@ -104,16 +112,15 @@ $result = $statement->fetchAll();
 $total_filter_data = $statement->rowCount();
 
 $output = '
-<label>Total Records : '.$total_data.'</label>
 <p></p>
 <table class="table tblCustomers">
   <tr>
-    <th hidden>ID</th>
-    <th>Event Title</th>
-    <th>Date&Time</th>
-    <th>Place</th>
-    <th>Description</th>
-    <th>Remove</th>
+    <th class="text-center" hidden>ID</th>
+    <th class="text-center">Event Title</th>
+    <th class="text-center">Date&Time</th>
+    <th class="text-center">Place</th>
+    <th class="text-center">Description</th>
+    <th class="text-center">Remove</th>
   </tr>
 ';
 if($total_data > 0) 
@@ -122,14 +129,13 @@ if($total_data > 0)
   {
       $output .= '
       <tr> 
-        <td hidden>'.$row["program_id"].'</td>
-        <td>'.$row["event_title"].'</td>
-        <td>'.$row["event_datetime"].'</td>
-        <td>'.$row["place"].'</td>
-        <td>'.$row["description"].'</td>
-  
+        <td class="text-center" hidden>'.$row["program_id"].'</td>
+        <td class="text-center">'.$row["event_title"].'</td>
+        <td class="text-center">'.date("F d, Y - l", strtotime($row["event_datetime"])).'</td>
+        <td class="text-center">'.$row["place"].'</td>
+        <td class="text-center">'.$row["description"].'</td>
         <td hidden>'.'<button type="button" style="width:100%;" class="btn editbtn"><i class="fas fa-user-edit"></i></button>'.'</td>
-        <td>'.'<button type="button" style="width:100%;" class="btn editbtn"><i class="fas fa-trash"></i></button>'.'</td>
+        <td class="text-center">'.'<button type="button" style="width:auto;" class="btn editbtn"><i class="fas fa-trash"></i></button>'.'</td>
       </tr>
       ';
     }
@@ -147,7 +153,7 @@ else
 $output .= '
 </table>
 <br />
-<div align="center">
+<div align="center" style="float:right;">
   <ul class="pagination">
 ';
 
@@ -258,7 +264,10 @@ for($count = 0; $count < count($page_array); $count++)
   }
 }
 
-// $output .= $previous_link . $page_link . $next_link;
+$output .= $previous_link .'<li class="page-item">
+<p class="page-link" style="pointer-events: none; cursor: default;color:#27329b;"><b>Page '.$page.'</b></p>
+</li>'
+. $next_link;
 $output .= '
   </ul>
 

@@ -1,4 +1,11 @@
-
+<style>
+  .table{
+  overflow: hidden;
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.1);;
+  }
+</style>
 <html>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -55,7 +62,7 @@
 <?php
 
 
-$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
+$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
 
 $page_array=array(); 
 $limit = '9';
@@ -124,7 +131,7 @@ if($total_data > 0)
       <td>'.$row["staff"].'</td>
       <td>'.$row["fullname"].'</td>
       <td>'.$row["request_type"].'</td>
-      <td>'.date("F d, Y - l [g:i:s A]", strtotime($row["date"])).'</td>
+      <td>'.date("F d, Y - l", strtotime($row["date_config"])).'</td>
       <td>'.$row["status"].'</td>
       
     ';
@@ -142,7 +149,7 @@ else
 $output .= '
 </table>
 <br />
-<div align="center">
+<div align="center" style="float:right">
   <ul class="pagination">
 ';
 
@@ -254,9 +261,10 @@ for($count = 0; $count < count($page_array); $count++)
 }
 }
 
-$output .= $previous_link  .'<li class="page-item">
-<p class="page-link" style="pointer-events: none; cursor: default;">'.$page.'</p>
-</li>'. $next_link;
+$output .= $previous_link .'<li class="page-item">
+<p class="page-link" style="pointer-events: none; cursor: default;color:#27329b;"><b>Page '.$page.'</b></p>
+</li>'
+. $next_link;
 $output .= '
   </ul>
 

@@ -80,7 +80,7 @@
 
                     // admin
                     if($_SESSION['admin_power'] == 1){
-
+                        $_SESSION['loggedin'] = true;
                         echo'
                     <script type="text/javascript">
 
@@ -93,7 +93,7 @@
                         showConfirmButton: false,
                         timer: 1500
                     }, function(){
-                        window.location.href="../../admin/staff_accounts.php";
+                        window.location.href=" ../../admin/dashboard.php";
                     })
                     });
                     
@@ -104,7 +104,7 @@
                     }
                     // staff
                     else{
-                        
+                        $_SESSION['loggedin'] = true;
                         echo'
                         <script type="text/javascript">
 
@@ -139,7 +139,7 @@
                         showConfirmButton: false,
                         timer: 1500
                     }, function(){
-                        window.location.href="../../admin/index.php";
+                        window.location.href="../../ad_index.php";
                     })
                     });
                     
@@ -161,7 +161,7 @@
                     showConfirmButton: false,
                     timer: 1500
                 }, function(){
-                    window.location.href="../../admin/index.php";
+                    window.location.href="../../ad_index.php";
                 })
                 });
                 

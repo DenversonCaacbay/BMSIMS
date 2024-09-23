@@ -31,6 +31,15 @@ h3 {
   0px 5px 10px rgba(0,0,0,0.1);
 }
 
+.error-message{
+  text-align: center;
+  color:#dc3545;
+  padding:10px;
+  width:100%;
+  background:#fff;
+  border: #dc3545 1px solid;
+}
+
 .btn-custom{
   width: 100%;
   margin-top: 10px;
@@ -60,8 +69,9 @@ h3 {
   color: #fff;
   box-shadow: -4px -4px 15px rgba(255,255,255,0.3),
       4px 4px 15px rgba(0,0,0,0.1);
-
-
+}
+.container-checker{
+  margin-top:10%;
 }
 .hide{
   display:none;
@@ -80,13 +90,26 @@ h3 {
 }
 
 .title1{
-  font-size: 40px;
+  font-size: 30px;
   font-weight:600;
   font-style: bold;
   margin: 0px;
   color:#27329b;
 }
-
+.btn-history{
+  width:auto;
+  background-color: #27329b;
+  color:#f2f2f2;
+  margin-top:5px;
+  float:right;
+}
+.btn-history:hover{
+  width:auto;
+  background-color: #5c6dc9;
+  color:#f2f2f2;
+  margin-top:5px;
+  float:right;
+}
 .title2{
   font-size: 18px;
   font-weight:600;
@@ -141,16 +164,19 @@ h3 {
   margin-left:80px;
   margin-top:10px;
 }
-/* .btn{
-  width: 100%;
-  margin-top: 10px;
-  border-radius: 50px;
+
+.btn-validation{
+  border-radius: 10px;
   padding: 10px;
   background-color: #27329b;
   color: #fff;
-  box-shadow: -4px -4px 15px rgba(255,255,255,0.3),
-      4px 4px 15px rgba(0,0,0,0.1);
-} */
+}
+.btn-validation:hover{
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #fff;
+  color: #27329b;
+}
 
 .sticky th{
   position: sticky;
@@ -160,8 +186,10 @@ h3 {
 .table-responsive::-webkit-scrollbar {
   display: none;
 }
-@media screen and (max-width: 480px) {
-body {
+
+
+@media screen and (max-device-width: 640px){
+  body {
     background:#27329b;
   }
   h3 {
@@ -174,7 +202,7 @@ body {
   .card {
   
     padding: 20px;
-  
+    width:100%;
     background: rgba(255, 255, 255, 1);
     border-radius: 15px;
     border: none;
@@ -218,13 +246,6 @@ body {
     width: 30px;
     color: #27329b;
   }
-  .show{
-    display: none;
-  }
-
-  .hide{
-    display: block;
-  }
   .modal-title{
     
   }
@@ -260,6 +281,162 @@ body {
     font-size: 20px;
   }
   .title1{
+    color: #fff;
+    font-size: 20px;
+  }
+  .wel{
+    width:100%;
+  }
+  .come{
+    width: 100%;
+  }
+
+  .ins{
+    width:70%;
+  }
+  .truc{
+    width: 30%;
+  }
+  .qr{
+    margin-left:20px;
+    margin-top:10px;
+  }
+
+  .user{
+    text-align: center;
+    color:#27329b;
+    width: 100%;
+  }
+  .pic{
+    text-align: center;
+    width: 100%;
+  }
+  .prof1{
+    width: 100%;
+  }
+  .info{
+    width: 100%;
+    color: #27329b;
+  }
+
+  .form-label{
+    font-size: 18px;
+  }
+  .form-control{
+    height:50px;
+    font-size: 15px;
+  }
+  .container-checker{
+    margin-top:40%;
+  }
+  .fas{
+    color: #27329b;
+  }
+}
+@media screen and (max-width: 480px) {
+body {
+    background:#27329b;
+  }
+  h3 {
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    text-shadow: none;
+  }
+  .container-checker{
+    margin-top:50%;
+  }
+  .card {
+  
+    padding: 20px;
+  
+    background: rgba(255, 255, 255, 1);
+    border-radius: 15px;
+    border: none;
+    box-shadow: none;
+  }
+  .header{
+    margin-top: 10%;
+    color: #fff;
+  }
+  .btn-cancel{
+    width: 30px;
+    margin-top: 0px;
+    border-radius:5px;
+    padding: 5px;
+    background-color: #27329b;
+    color: #fff;
+    box-shadow: -4px -4px 15px rgba(255,255,255,0.3),
+        4px 4px 15px rgba(0,0,0,0.1);
+  
+  
+  }
+  .btn-custom{
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #27329b;
+    color: #fff;
+    box-shadow: none;
+  }
+
+
+  .btn-custom:hover{
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #3642aa;
+    color: #fff;
+    box-shadow: none;
+  }
+  
+
+  .btn-status{
+    width: 30px;
+    color: #27329b;
+  }
+  .modal-title{
+    
+  }
+  .table th{
+    background-color: #27329b;
+    font-size: 10px;
+    color:white;
+  }
+  .table  tr{
+    background-color: #f2f2f2;
+    font-size: 10px;
+  }
+  .table  td h5{
+    font-size: 10px;
+  }
+  
+  .total{
+    color: #27329b;
+  }
+  
+  .loginimage{
+    text-align: center;
+  }
+
+  .loginimage1{
+      height: 100px;
+      margin-top: 2%;
+  }
+  .card3{
+    margin-left: 0%;
+    width:330px;
+    border: #27329b 2px solid;
+  }
+  .title{
+    color: #27329b;
+    font-size: 20px;
+  }
+  .title1{
+    text-align:left;
     color: #fff;
     font-size: 20px;
   }

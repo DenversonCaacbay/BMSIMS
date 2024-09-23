@@ -10,7 +10,7 @@
     session_start();
 
     //login
-    $username = '';
+    $email = '';
     $password = '';
     $newUsername = '';
     $action = '';
@@ -20,11 +20,11 @@
     // }
 
     if($_SERVER['REQUEST_METHOD'] == "POST"){
-        $username = $_POST['username'];
+        $email = $_POST['email'];
         $password = $_POST['password'];
         
         //checks if empty
-        if(empty($username) || empty($password)){
+        if(empty($email) || empty($password)){
             echo'
             <script type="text/javascript">
             $(document).ready(function(){
@@ -35,17 +35,17 @@
                 showConfirmButton: false,
                 timer: 1500
             }, function(){
-                window.location.href="../../user/request.php";
+                window.location.href="../../user/user_index.php";
             })
             });       
             </script>';
             return;
         }
         else{
-            $sql = "SELECT * FROM tbl_resident WHERE username = :username";
+            $sql = "SELECT * FROM resident_accounts WHERE email = :email";
             $statement = $pdo->prepare($sql);
             
-            $statement->execute(array('username' => $username));
+            $statement->execute(array('email' => $email));
 
             $logins = $statement->fetchAll(PDO::FETCH_ASSOC);
             $count = $statement->rowCount();
@@ -55,63 +55,77 @@
 
             foreach($logins as $login){
                 $password_result = $login['password'];
-                $_SESSION['user_id'] = $login['acc_id'];
-                $_SESSION['firstname'] = $login['firstname'];
-                $_SESSION['middlename'] = $login['middlename'];
-                $_SESSION['lastname'] = $login['lastname'];
-                $_SESSION['username'] = $login['username'];
-                $_SESSION['admin_power'] = $login['admin_power'];
+                $_SESSION['user_id'] = $login['res_id'];
+                $_SESSION['fname'] = $login['fname'];
+                $_SESSION['mname'] = $login['mname'];
+                $_SESSION['lname'] = $login['lname'];
+                $_SESSION['email'] = $login['email'];
+                $_SESSION['access'] = $login['access'];
 
             }
 
-            if($count > 0){
-                if(password_verify($password, $password_result)){
-                    if($_SESSION['admin_power'] == 'Not Approved'){
-
+            if($count > 0)
+            {
+                if(password_verify($password, $password_result))
+                {
+                    if($_SESSION['access'] == 'Not Yet Approved')
+                    {
                         echo'
                         <script type="text/javascript">
-
-                    $(document).ready(function(){
-
-                    swal({
-                        position: "top-end",
-                        type: "error",
-                        title: "Account not yet Approved Check your Email if your account is approved",
-                        showConfirmButton: false,
-                        timer: 2000
-                    }, function(){
-                        window.location.href="../../user/user_index.php";
-                    })
-                    });
-                    
-                    </script>';
-                    return;
-
+                            $(document).ready(function(){
+                            swal({
+                                position: "top-end",
+                                type: "error",
+                                title: "Account not yet Approved Check your Email if your account is approved",
+                                showConfirmButton: false,
+                                timer: 2000
+                            }, function(){
+                                window.location.href="../../user/user_index.php";
+                            })
+                            });
+                        </script>';
+                        return;
                     }
-                    else if($_SESSION['admin_power'] == 'Banned'){
-
+                    else if($_SESSION['access'] == 'Banned')
+                    {
                         echo'
                         <script type="text/javascript">
-
-                    $(document).ready(function(){
-
-                    swal({
-                        position: "top-end",
-                        type: "error",
-                        title: "Your Account is Banned",
-                        showConfirmButton: false,
-                        timer: 2000
-                    }, function(){
-                        window.location.href="../../user/user_index.php";
-                    })
-                    });
-                    
-                    </script>';
-                    return;
-
+                            $(document).ready(function(){
+                            swal({
+                                position: "top-end",
+                                type: "error",
+                                title: "Your Account is Banned",
+                                showConfirmButton: false,
+                                timer: 2000
+                            }, function(){
+                                window.location.href="../../user/user_index.php";
+                            })
+                            });
+                        </script>';  
+                        return;
+                    }
+                    else if($_SESSION['access'] == 'Approved')
+                    {
+                        $_SESSION['loggedin'] = true;
+                        echo'
+                        <script type="text/javascript">
+                        $(document).ready(function(){
+                        swal({
+                            position: "top-end",
+                            type: "success",
+                            title: "Login Successfully",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }, function(){
+                            window.location.href="../../user/request.php";
+                        })
+                        });
+                        </script>';
+                        return;
                     }
 
-                    else{
+                    else
+                    {
                         echo' 
                         <script type="text/javascript">
 
@@ -130,9 +144,7 @@
                         
                         </script>';
                         return;
-
-                return; 
-                }
+                    }
                     
                 }
                 else{
@@ -154,29 +166,8 @@
                     
                     </script>';
 
-return;
+                    return;
                 }
-            }
-            else{
-                echo'
-                    <script type="text/javascript">
-
-                    $(document).ready(function(){
-
-                    swal({
-                        position: "top-end",
-                        type: "error",
-                        title: "Wrong Username or Password",
-                        showConfirmButton: false,
-                        timer: 1500
-                    }, function(){
-                        window.location.href="../../user/user_index.php";
-                    })
-                    });
-                    
-                    </script>';
-
-return;
             }
 
         }

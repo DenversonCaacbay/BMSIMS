@@ -8,50 +8,52 @@
     session_start();
     $user = $_SESSION['user_id'];
 
-    $sql = 'UPDATE tbl_resident 
-        SET  firstname = :firstname, middlename = :middlename, lastname = :lastname, gender = :gender,place_of_birth = :place_of_birth, bdate = :bdate, civil_status = :civil_status, address = :address, purok = :purok,email = :email , phone = :phone WHERE acc_id ='.$user;
+    $sql = 'UPDATE resident_accounts 
+        SET  fname = :fname, mname = :mname, lname = :lname, gender = :gender, pob = :pob, bdate = :bdate,age = :age, status = :status, street = :street, purok = :purok,email = :email , contact = :contact WHERE res_id ='.$user;
 
     $statement = $pdo->prepare($sql);
     $data = [
-        'firstname' => 'zzz',
-        'middlename' => 'zzz',
-        'lastname' => 'zzz',
+        'fname' => 'zzz',
+        'mname' => 'zzz',
+        'lname' => 'zzz',
         'gender' => 'placeholder',
-        'place_of_birth' => 'zzz',
+        'pob' => 'zzz',
         'bdate' => 'zzz',
-        'civil_status' => 'zzz',
-        'address' => 'zzz',
+        'age' => 'zzz',
+        'status' => 'zzz',
+        'street' => 'zzz',
         'purok' => 'zzz',
         'email' => 'zzz',
-        'phone' => 999,
+        'contact' => 999,
          
     ];
-    $statement->bindParam(':firstname', $data['firstname']);
-    $statement->bindParam(':middlename', $data['middlename']);
-    $statement->bindParam(':lastname', $data['lastname']);
+    $statement->bindParam(':fname', $data['fname']);
+    $statement->bindParam(':mname', $data['mname']);
+    $statement->bindParam(':lname', $data['lname']);
     $statement->bindParam(':gender', $data['gender']);
-    $statement->bindParam(':place_of_birth', $data['place_of_birth']);
+    $statement->bindParam(':pob', $data['pob']);
     $statement->bindParam(':bdate', $data['bdate']);
-    $statement->bindParam(':civil_status', $data['civil_status']);
-    $statement->bindParam(':address', $data['address']);
-
+    $statement->bindParam(':age', $data['age']);
+    $statement->bindParam(':status', $data['status']);
+    $statement->bindParam(':street', $data['street']);
     $statement->bindParam(':purok', $data['purok']);
     $statement->bindParam(':email', $data['email']);
-    $statement->bindParam(':phone', $data['phone']);
+    $statement->bindParam(':contact', $data['contact']);
 
 
     //change
-    $data['firstname'] = $_POST['firstname'];
-    $data['middlename'] = $_POST['middlename'];
-    $data['lastname'] = $_POST['lastname'];
-    $data['place_of_birth'] = $_POST['place_of_birth'];
-    $data['bdate'] = $_POST['bdate'];
-    $data['civil_status'] = $_POST['civil_status'];
-    $data['address'] = $_POST['address'];
+    $data['fname'] = $_POST['fname'];
+    $data['mname'] = $_POST['mname'];
+    $data['lname'] = $_POST['lname'];
     $data['gender'] = $_POST['gender'];
+    $data['pob'] = $_POST['pob'];
+    $data['bdate'] = $_POST['bdate'];
+    $data['age'] = $_POST['age'];
+    $data['status'] = $_POST['status'];
+    $data['street'] = $_POST['street'];
     $data['purok'] = $_POST['purok'];
     $data['email'] = $_POST['email'];
-    $data['phone'] = $_POST['phone'];
+    $data['contact'] = $_POST['contact'];
 
 
     if($statement->execute()){

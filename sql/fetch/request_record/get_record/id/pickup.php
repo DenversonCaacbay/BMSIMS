@@ -1,4 +1,11 @@
-
+<style>
+  .table {
+  overflow: hidden;
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.1);;
+}
+</style>
 <html>
 
 
@@ -100,7 +107,7 @@
 <?php
 
 
-$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
+$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
 
 $page_array=array(); 
 $limit = '5';
@@ -144,23 +151,24 @@ $output = '
 <table class="table sticky">
   <thead>
     <tr>
-    <th hidden>Request ID</th>
-    <th hidden>Tracking Id</th>
-    <th hidden>Request Date</th>
-    <th>Full name</th>
-    <th hidden>request type</th>
-    <th hidden>Purpose</th>
-    <th hidden>close</th>
-    <th hidden>open</th>
-    <th>Get Day</th>
-    <th hidden>Payment Method</th>
-    <th hidden>Reference No</th>
-    <th hidden>Amount</th>
-    <th hidden>Date Paid</th>
-    <th>Payment Status</th>
-    <th>Request Status</th>
-    <th hidden>username</th>
-    <th>Update</th>
+    <th class="text-center" hidden>Request ID</th>
+    <th class="text-center" hidden>Tracking Id</th>
+    <th class="text-center" hidden>Request Date</th>
+    <th class="text-center">Full name</th>
+    <th class="text-center" hidden>request type</th>
+    <th class="text-center" hidden>Purpose</th>
+    <th class="text-center" hidden>close</th>
+    <th class="text-center" hidden>open</th>
+    <th class="text-center" hidden>Get Day</th>
+    <th class="text-center" hidden>Payment Method</th>
+    <th class="text-center" hidden>Reference No</th>
+    <th class="text-center" hidden>Amount</th>
+    <th class="text-center" hidden>Date Paid</th>
+    <th class="text-center" hidden>Payment Status</th>
+    <th class="text-center">Request Status</th>
+    <th class="text-center" hidden>username</th>
+    <th class="text-center" class="text-center">Print Request</th>
+    <th class="text-center">Update</th>
     </tr>
   </thead>
 ';
@@ -171,23 +179,24 @@ if($total_data > 0)
     $output .= '
     <tbody id="myTable">
       <tr>
-        <td hidden>'.$row["req_id"].'</td>
-        <td hidden>'.$row["tracking_id"].'</td>
-        <td hidden>'.$row["req_date"].'</td>
-        <td>'.$row["fullname"].'</td>
-        <td hidden>'.$row["request_type"].'</td>
-        <td hidden>'.$row["purpose"].'</td>
-        <td hidden>'.$row["date_open"].'</td>
-        <td hidden>'.$row["date_close"].'</td>
-        <td>'.$row["get_date"].'</td>
-        <td>'.$row["payment_method"].'</td>
-        <td hidden>'.$row["reference_no"].'</td>
-        <td>'.$row["amount"].'</td>
-        <td>'.$row["date_paid"].'</td>
-        <td>'.$row["payment_status"].'</td>
-        <td>'.$row["request_status"].'</td>
-        <td hidden>'.$row["username"].'</td>
-        <td>'.'<button type="button" style="width:100%;" class="btn btn-custom editbtn">Mark as Done</button>'.'</td>
+        <td class="text-center" hidden>'.$row["req_id"].'</td>
+        <td class="text-center" hidden>'.$row["tracking_id"].'</td>
+        <td class="text-center" hidden>'.$row["req_date"].'</td>
+        <td class="text-center">'.$row["fullname"].'</td>
+        <td class="text-center" hidden>'.$row["request_type"].'</td>
+        <td class="text-center" hidden>'.$row["purpose"].'</td>
+        <td class="text-center" hidden>'.$row["date_open"].'</td>
+        <td class="text-center" hidden>'.$row["date_close"].'</td>
+        <td class="text-center" hidden>'.date("F d, Y - l", strtotime($row["get_date"])).'</td>
+        <td class="text-center" hidden>'.$row["payment_method"].'</td>
+        <td class="text-center" hidden>'.$row["reference_no"].'</td>
+        <td class="text-center" hidden>'.$row["amount"].'</td>
+        <td class="text-center" hidden>'.$row["date_paid"].'</td>
+        <td class="text-center" hidden>'.$row["payment_status"].'</td>
+        <td class="text-center">'.$row["request_status"].'</td>
+        <td class="text-center" hidden>'.$row["email"].'</td>
+        <td class="text-center" class="text-center">'."<a href='../../generate_id.php?pdf=1&id=".$row['req_id']."' target='_blank'><i class='fas fa-file-invoice'></i></a>".'</td>
+        <td class="text-center">'.'<button type="button" style="width:auto;" class="btn btn-custom editbtn">Mark as Done</button>'.'</td>
       </tr>
     </tbody>
     ';
@@ -205,7 +214,7 @@ else
 $output .= '
 </table>
 <br />
-<div align="center">
+<div align="center" style="float:right">
   <ul class="pagination">
 ';
 
@@ -319,7 +328,7 @@ for($count = 0; $count < count($page_array); $count++)
 }
 
 $output .= $previous_link .'<li class="page-item">
-<p class="page-link" style="pointer-events: none; cursor: default;">'.$page.'</p>
+<p class="page-link" style="pointer-events: none; cursor: default;color:#27329b;"><b>Page '.$page.'</b></p>
 </li>'
 . $next_link;
 $output .= '

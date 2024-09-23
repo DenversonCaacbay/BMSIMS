@@ -25,6 +25,6 @@
 
     echo 'Logging Out...';
 
-    header("Location: ../../admin/index.php");
+    header("Location: ../../ad_index.php");
     exit();
 ?>

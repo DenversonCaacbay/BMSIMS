@@ -1,7 +1,33 @@
 <?php
-require '../../../sql/auth/account_staff_check.php';
-                           
+session_start(); // Start the session
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Redirect the user to user_index.php
+    header("Location: ../../../ad_index.php");
+    exit;
+}                           
 ?>
+<?php
+$host = 'localhost';
+$db = 'u622464203_bmsims';
+$user = 'u622464203_bmsims';
+$pass = 'Bmsims2023';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // echo "Connected to database successfully!";
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?>
+
+<?php
+    $query = "SELECT * FROM tbl_request WHERE request_status = 'Pending'";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,16 +77,19 @@ require '../../../sql/auth/account_staff_check.php';
       <a href="../../menu.php" class="nav-link  hover-dark  text-light">
       <i class="fas fa-folder  mr-3 text-light fa-fw" style="font-size:20px"></i>
                 List of Request
+                <?php if (!empty($entries)): ?>
+                <i class="fas fa-exclamation-circle" style="margin-left:50px;font-size:18px;color: #fff;"></i> <!-- Red dot or any other indicator -->
+              <?php endif; ?>
             </a>
 </li>
 
 
     <!---->
 
-    <li class="nav-item" style="margin-top:55vh">
-    <a href="../../../sql/auth/staff_account_logout.php" class="nav-link nav-link1 text-light">
-      <i class="fas fa-sign-out-alt mr-3 text-light fa-fw" style="font-size:20px"></i>
-                Logout
+    <li class="nav-item text-center mb-4" style="position:fixed;bottom:0;margin-left:6%;">
+    <a href="../../../sql/auth/staff_account_logout.php" class="nav-link nav-link1 text-center text-light">
+    <img width="30" height="30" src="https://img.icons8.com/ios/50/FFFFFF/logout-rounded-left.png" alt="logout-rounded-left"/>
+               
             </a>
     </li>
   </ul>
@@ -76,7 +105,7 @@ require '../../../sql/auth/account_staff_check.php';
   <div class="row nav1 mb-1">
 
     <div class="col-8">
-        <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button>
+        <!-- <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button> -->
     </div>
     <div class="col-4 mt-2 align-items-right">
         <div class="d-flex top-header ">
@@ -98,14 +127,9 @@ require '../../../sql/auth/account_staff_check.php';
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-10" style="font-size:2rem">
-                        Business Permit
+                        <b>Business Permit</b>
                         </div>
-                        <div class="col-sm-2">
-                          <div class="tab">
-                            <a href="../business_permit_pickup.php" class="btn btn-custom btn-active tablinks">Pick Up</a>
-                            <a href="../business_permit_gcash.php" class="btn btn-custom tablinks">Gcash</a>
-                        </div>
-                        </div>
+            
                     </div>
                 </div>
                 <hr class="mt-2" style="margin:10px">
@@ -115,10 +139,11 @@ require '../../../sql/auth/account_staff_check.php';
         <div class="container">
         <nav style="margin-left:15px;--bs-breadcrumb-divider: '|';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item" aria-current="page"><a href="../business_permit_pickup.php">All Request</a></li>
+                <li class="breadcrumb-item" aria-current="page"><a href="../business_permit_pickup.php">Pending Request</a></li>
                 <!-- <li class="breadcrumb-item"><a href="processed.php">Processed</a></li> -->
                 <li class="breadcrumb-item"><a href="get_record.php">Get Record</a></li>
                 <li class="breadcrumb-item"><a href="done.php" class="link-active">Done</a></li>
+                <li class="breadcrumb-item"><a href="disapproved.php">Disapproved</a></li>
             </ol>
         </nav>
             <div class="card-req">

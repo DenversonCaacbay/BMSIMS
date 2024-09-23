@@ -1,7 +1,14 @@
 <?php
-require '../sql/auth/account_check2.php';
+// require '../sql/auth/account_check2.php';
+// require '../sql/auth/account_user_check.php'; 
 $pdo = require '../sql/config/connection.php';
-                           
+session_start(); // Start the session
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Redirect the user to user_index.php
+    header("Location: ../ad_index.php");
+    exit;
+}                        
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,6 +83,14 @@ $pdo = require '../sql/config/connection.php';
   <p class="text-light font-weight-bold text-uppercase px-3 small pb-4 mb-0"></p>
 
   <ul class="nav flex-column mb-0">
+  <p class="text-light font-weight-bold">Menu</p>
+  <li class="nav-item">
+      <a href="dashboard.php" class="nav-link text-light">
+      <i class="fas fa-home  mr-3 text-light fa-fw"></i>
+               Dashboard
+            </a>
+    </li>
+    <hr class="text-light">
   <p class="text-light font-weight-bold">Account Manager</p>
     <li class="nav-item">
       <a href="staff_accounts.php" class="nav-link text-light">
@@ -90,7 +105,7 @@ $pdo = require '../sql/config/connection.php';
             </a>
     </li>
     <li class="nav-item">
-      <a href="resident_accounts.php" class="nav-link text-light">
+      <a href="pending_accounts.php" class="nav-link text-light">
       <i class="fas fa-user  mr-3 text-light fa-fw"></i>
                 Residents Account
             </a>
@@ -109,54 +124,55 @@ $pdo = require '../sql/config/connection.php';
                 Payment History
             </a>
     </li>
-    <li class="nav-item">
-      <a href="logs.php" class="nav-link text-light">
-      <i class="fas fa-history mr-3 text-light fa-fw"></i>
-                Logs
-            </a>
-    </li>
+    <!--<li class="nav-item">-->
+    <!--  <a href="logs.php" class="nav-link text-light">-->
+    <!--  <i class="fas fa-history mr-3 text-light fa-fw"></i>-->
+    <!--            Logs-->
+    <!--        </a>-->
+    <!--</li>-->
 
 
 
     <!---->
 
-    <li class="nav-item" style="margin-top:30.5vh">
-      <a href="../sql/auth/account_logout.php" class="nav-link nav-link1 text-light">
-      <i class="fas fa-sign-out-alt mr-3 text-light fa-fw"></i>
-                Logout
+    <li class="nav-item p-5">
+      <a href="../sql/auth/account_logout.php" class="nav-link nav-link1 text-center text-light">
+      <!-- <i class="fas fa-sign-out-alt text-light fa-fw" style="font-size:30px;"></i> -->
+      <!--<img width="30" height="30" src="https://img.icons8.com/ios/50/FFFFFF/logout-rounded-left.png" alt="logout-rounded-left"/>-->
+       <img width="30" height="30" src="../images/icons/logout_button_white.png" alt="logout-rounded-left"/>
             </a>
     </li>
   </ul>
 
 </div>
 
+</div>
+
 <!-- Page content holder -->
 
 <!-- Page content holder -->
-<div class="page-content p-4" id="content">
+<div class="page-content p-0" id="content">
   <!-- Toggle button -->
-  <div class="row nav1 mb-3">
-
-    <div class="col-8">
-        <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button>
-    </div>
-    <div class="col-4">
-        <div class="media d-flex align-items-center top-header">
-            <img loading="lazy" src="../images/profile.png" alt="..." width="30" height="30">
-            <div class="media-body">
-                <a class="user-style"  href="#" ><?php echo $_SESSION['fullname'] ?></a>
+  <div class="row nav1 mb-1">
+        <div class="col-9">
+            <!-- <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button> -->
+        </div>
+        <div class="col-3 mt-2 align-items-right">
+            <div class="d-flex top-header ">
+                <img loading="lazy" src="../images/profile.png" alt="..." width="30" height="30">
+                <div class="media-body">
+                    <a class="user-style"  href="#"><?php echo $_SESSION['fullname'] ?></a>
+                </div>
             </div>
         </div>
     </div>
-
-  </div>
   <div class="separator"></div>
   <div class="header">
         <div class="card-body">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8" style="margin-top:8px">
-                    Payment History <i class="fas fa-user  mr-3 fa-fw"></i>
+                    <b>Payment History</b> <i class="fas fa-user  mr-3 fa-fw"></i>
                     </div>
                     <div class="col-lg-4"> 
                       <div class="tab1">

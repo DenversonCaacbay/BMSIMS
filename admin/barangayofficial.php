@@ -1,6 +1,13 @@
 <?php
-require '../sql/auth/account_check2.php';
-                           
+// require '../sql/auth/account_check2.php';
+// require '../sql/auth/account_user_check.php'; 
+session_start(); // Start the session
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Redirect the user to user_index.php
+    header("Location: ../ad_index.php");
+    exit;
+}                        
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,6 +44,14 @@ require '../sql/auth/account_check2.php';
   <p class="text-gray font-weight-bold text-uppercase px-3 small pb-4 mb-0"></p>
 
   <ul class="nav flex-column mb-0">
+  <p class="text-light font-weight-bold">Menu</p>
+  <li class="nav-item">
+      <a href="dashboard.php" class="nav-link text-light">
+      <i class="fas fa-home  mr-3 text-light fa-fw"></i>
+               Dashboard
+            </a>
+    </li>
+    <hr class="text-light">
   <p class="text-light font-weight-bold">Account Manager</p>
     <li class="nav-item">
       <a href="staff_accounts.php" class="nav-link text-light">
@@ -51,7 +66,7 @@ require '../sql/auth/account_check2.php';
             </a>
     </li>
     <li class="nav-item">
-      <a href="resident_accounts.php" class="nav-link text-light">
+      <a href="pending_accounts.php" class="nav-link text-light">
       <i class="fas fa-user  mr-3 text-light fa-fw"></i>
                 Residents Account
             </a>
@@ -70,24 +85,27 @@ require '../sql/auth/account_check2.php';
                 Payment History
             </a>
     </li>
-    <li class="nav-item">
-      <a href="logs.php" class="nav-link text-light">
-      <i class="fas fa-history mr-3 text-light fa-fw"></i>
-                Logs
-            </a>
-    </li>
+    <!--<li class="nav-item">-->
+    <!--  <a href="logs.php" class="nav-link text-light">-->
+    <!--  <i class="fas fa-history mr-3 text-light fa-fw"></i>-->
+    <!--            Logs-->
+    <!--        </a>-->
+    <!--</li>-->
 
 
 
     <!---->
 
-    <li class="nav-item" style="margin-top:30.5vh">
-      <a href="../sql/auth/account_logout.php" class="nav-link nav-link1 text-light">
-      <i class="fas fa-sign-out-alt mr-3 text-light fa-fw"></i>
-                Logout
+    <li class="nav-item p-5">
+      <a href="../sql/auth/account_logout.php" class="nav-link nav-link1 text-center text-light">
+      <!-- <i class="fas fa-sign-out-alt text-light fa-fw" style="font-size:30px;"></i> -->
+      <!--<img width="30" height="30" src="https://img.icons8.com/ios/50/FFFFFF/logout-rounded-left.png" alt="logout-rounded-left"/>-->
+       <img width="30" height="30" src="../images/icons/logout_button_white.png" alt="logout-rounded-left"/>
             </a>
     </li>
   </ul>
+
+</div>
 
 </div>
 <!-- End vertical navbar -->
@@ -104,28 +122,29 @@ require '../sql/auth/account_check2.php';
                         X
                     </button>
                 </div>
-
                 <form action="../sql/post/official_insert.php" method="POST" enctype="multipart/form-data">
-
                     <div class="modal-body">
-                            <div class="col-md-12 form-group">
-                                <label>Position</label>
-                                <select style="padding:13px;" class="form-control form-select" name="position" id="inputGroupSelect01" required>
-                                    <option selected value=""></option>
-                                    <option value="Punong Barangay">Punong Barangay</option>
-                                    <option value="Kagawad on Public Works & Infrastracture / Kids & Awards">Kagawad on Public Works & Infrastracture / Kids & Awards</option>
-                                    <option value="Kagawad on Education & Public Information Women & Family">Kagawad on Education & Public Information Women & Family</option>
-                                    <option value="Kagawad on Ethics / Barangay Affairs / Human Rights and Legal Matters">Kagawad on Ethics / Barangay Affairs / Human Rights and Legal Matters</option>
-                                    <option value="Kagawad Committee on Peace & Order">Kagawad Committee on Peace & Order</option>
-                                    <option value="Kagawad Committee on Trades and Industry / Sports">Kagawad Committee on Trades and Industry / Sports </option>
-                                    <option value="Kagawad on Committee on Appropriation">Kagawad on Committee on Appropriation</option>
-                                    <option value="Kagawad on Committee on Health & Sanitation / Environment Protection">Kagawad on Committee on Health & Sanitation / Environment Protection</option>
-                                    <option value="Barangay Secretary">Barangay Secretary</option>
-                                    <option value="Barangay Assistant Secretary">Barangay Assistant Secretary</option>
-                                    <option value="Barangay SK Chairperson">Barangay SK Chairperson</option>
-                                    <option value="Barangay Treasurer">Barangay Treasurer</option>
-                                </select>
-                            </div>
+                        <div class="col-md-12">
+                            <label>Profile Picture</label>
+                            <input type="file" name="image" class="form-control" style="height:50px;">                  
+                        </div>
+                        <div class="col-md-12 form-group mt-3">
+                            <label>Position</label>
+                            <select style="padding:13px;" class="form-control form-select" name="position" id="inputGroupSelect01" required>
+                                <option selected value=""></option>
+                                <option value="Punong Barangay">Punong Barangay</option>
+                                <option value="Barangay Kagawad on Public Works & Infrastracture / Kids & Awards">Barangay Kagawad on Public Works & Infrastracture / Kids & Awards</option>
+                                <option value="Barangay Kagawad on Education & Public Information Women & Family">Barangay Kagawad on Education & Public Information Women & Family</option>
+                                <option value="Barangay Kagawad on Ethics / Barangay Affairs / Human Rights and Legal Matters">Barangay Kagawad on Ethics / Barangay Affairs / Human Rights and Legal Matters</option>
+                                <option value="Barangay Kagawad Committee on Peace & Order">Barangay Kagawad Committee on Peace & Order</option>
+                                <option value="Barangay Kagawad Committee on Trades and Industry / Sports">Barangay Kagawad Committee on Trades and Industry / Sports </option>
+                                <option value="Barangay Kagawad on Committee on Appropriation">Barangay Kagawad on Committee on Appropriation</option>
+                                <option value="Barangay Kagawad on Committee on Health & Sanitation / Environment Protection">Barangay Kagawad on Committee on Health & Sanitation / Environment Protection</option>
+                                <option value="Barangay Secretary">Barangay Secretary</option>
+                                <option value="Barangay SK Chairperson">Barangay SK Chairperson</option>
+                                <option value="Barangay Treasurer">Barangay Treasurer</option>
+                            </select>
+                        </div>
                         <div class="row">
                             <div class="col-sm-4 form-group" style="margin-top: 10px">
                                 <label>First Name</label>
@@ -139,23 +158,12 @@ require '../sql/auth/account_check2.php';
                                 <label>Last Name</label>
                                 <input type="text" name="lastname" class="form-control" required>
                             </div>
-                        </div>
-
-                        <input type="text" name="acc_id" value="<?php echo $_SESSION['user_id'] ?>" hidden>
-                        <input type="text" name="staff" value="<?php echo $_SESSION['fullname'] ?>" hidden>
-                        <input type="text" name="date_config" value="<?php echo date("Y-m-d"); ?>" hidden>
-                        <input type="text" name="status" class="form-control" placeholder="" value="Added" hidden>
-
-                        
+                        </div>  
                     </div>
-
-
-
                     <div class="modal-footer">
                         <button type="submit" name="insertdata" style="width:100%" class="btn btn-custom">Add</button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
@@ -172,7 +180,7 @@ require '../sql/auth/account_check2.php';
                 </button>
             </div>
 
-            <form action="sql/fetch/info/official_update.php" method="POST">
+            <form action="../sql/fetch/info/official_update.php" method="POST">
                 <div class="modal-body">
                     <input type="hidden" name="official_id" id="official_id" required>
 
@@ -183,12 +191,8 @@ require '../sql/auth/account_check2.php';
                         <input type="text" name="middlename" id="middlename" class="form-control" placeholder="" required>
                         <label class="mt-2">Last Name</label>
                         <input type="text" name="lastname" id="lastname" class="form-control" placeholder="" required>
+                       
 
-
-                        <input type="text" name="acc_id" value="<?php echo $_SESSION['user_id'] ?>" hidden >
-                        <input type="text" name="staff" value="<?php echo $_SESSION['fullname'] ?>" hidden>
-                        <input type="text" name="date_config" value="<?php echo date("Y-m-d"); ?>" hidden>
-                        <input type="text" name="status" class="form-control" placeholder="" value="Updated" hidden>
   
                 </div>
                 <div class="modal-footer">
@@ -238,22 +242,20 @@ require '../sql/auth/account_check2.php';
 
 
 <!-- Page content holder -->
-<div class="page-content p-4" id="content">
-<div class="row nav1 mb-3">
-
-<div class="col-8">
-    <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button>
-</div>
-<div class="col-4">
-    <div class="media d-flex align-items-center top-header ">
-        <img loading="lazy" src="../images/profile.png" alt="..." width="30" height="30">
-        <div class="media-body">
-        <a class="user-style"  href="#" ><?php echo $_SESSION['fullname'] ?></a>
+<div class="page-content p-0" id="content">
+    <div class="row nav1 mb-1">
+        <div class="col-9">
+            <!-- <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button> -->
+        </div>
+        <div class="col-3 mt-2 align-items-right">
+            <div class="d-flex top-header ">
+                <img loading="lazy" src="../images/profile.png" alt="..." width="30" height="30">
+                <div class="media-body">
+                    <a class="user-style"  href="#"><?php echo $_SESSION['fullname'] ?></a>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
-</div>
   <!-- Demo content -->
   <div class="separator"></div>
   <div class="header">
@@ -261,11 +263,11 @@ require '../sql/auth/account_check2.php';
             <div class="container">
                 <div class="row">
                     <div class="col-lg-10" style="margin-top:8px">
-                    Barangay Officials <i class="fas fa-user  mr-3 fa-fw"></i>
+                    <b>Barangay Officials</b> <i class="fas fa-user  mr-3 fa-fw"></i>
                     </div>
                     <div class="col-lg-2">
                     <!-- <a href="../sql/generate_report/generate_official.php" class="btn btn-custom"  id="btnExport" value="Export" target="_blank">Generate PDF</a> -->
-                    <button type="button" class="btn btn-custom" data-toggle="modal" data-target="#studentaddmodal">
+                    <button type="button" class="btn btn-custom" style="float:right" data-toggle="modal" data-target="#studentaddmodal">
                          Add Officials
                     </button>
                     </div>
@@ -278,9 +280,9 @@ require '../sql/auth/account_check2.php';
           <div class="card2">
             <div class="card-body">
               <div class="form-group">
-                <input type="text" name="search_box" id="search_box" class="form-control mb-2" placeholder="Enter First Name" />
+                <input type="text" name="search_box" id="search_box" class="form-control mb-2" placeholder="Search..." />
               </div>
-              <div class="table-responsive" style="height:450px" id="dynamic_content">
+              <div class="table-responsive" style="height:480px" id="dynamic_content">
                 <!--Sample-->
                     
                 <!--End of Sample-->
@@ -330,7 +332,7 @@ require '../sql/auth/account_check2.php';
             });
         });
     </script>
-
+ 
 
 </body>
 </html>

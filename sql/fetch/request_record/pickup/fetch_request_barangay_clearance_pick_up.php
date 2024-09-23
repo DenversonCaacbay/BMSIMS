@@ -1,8 +1,12 @@
-
+<style>
+  .table {
+  overflow: hidden;
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.1);;
+}
+</style>
 <html>
-
-
-
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function () {
@@ -37,12 +41,46 @@
             });
         });
     </script>  
-  <script>
+
+    <script>
         $(document).ready(function () {
 
-            $('.deletebtn').on('click', function () {
+            $('.disbtn').on('click', function () {
 
-                $('#deletemodal').modal('show');
+                $('#dismodal').modal('show');
+
+                $tr = $(this).closest('tr');
+
+                var data = $tr.children("td").map(function () {
+                    return $(this).text();
+                }).get();
+
+                console.log(data);
+                $('#req_id1').val(data[0]);
+                $('#tracking_id1').val(data[1]);
+                $('#req_date1').val(data[2]);
+                $('#fullname1').val(data[3]);    
+                $('#request_type1').val(data[4]);
+                $('#purpose1').val(data[5]);
+                $('#date_open1').val(data[6]);
+                $('#date_close1').val(data[7]);
+                $('#get_date1').val(data[8]);
+                $('#payment_method1').val(data[7]);
+                $('#reference_no1').val(data[10]);
+                $('#amount1').val(data[11]);
+                $('#date_paid1').val(data[8]);
+                $('#payment_status1').val(data[13]);
+                $('#request_status1').val(data[14]);
+                $('#username1').val(data[15]);
+            });
+        });
+    </script>  
+  <!-- <script>
+        $(document).ready(function () {
+
+            $('.disbtn').on('click', function () {
+
+                $('#dismodal').modal('show');
  
                 $tr = $(this).closest('tr');
 
@@ -72,7 +110,7 @@
 
             });
         });
-  </script>
+  </script> -->
 
   <script>
         $(document).ready(function(){
@@ -111,7 +149,7 @@
 <?php
 
 
-$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
+$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
 
 $page_array=array(); 
 $limit = '5';
@@ -127,7 +165,7 @@ else
 }
 
 $query = "
-SELECT * FROM tbl_request WHERE request_type='Barangay Clearance' AND payment_method='Pick Up' AND request_status='Please Wait'
+SELECT * FROM tbl_request WHERE request_type='Barangay Clearance' AND payment_method='Pick Up' AND request_status='Pending'
 ";
  
 if($_POST['query'] != '')
@@ -160,21 +198,21 @@ $result = $statement->fetchAll();
 $total_filter_data = $statement->rowCount();
 
 $output = '
-<table class="table sticky">
+<table class="table table-hover sticky">
 <thead>
   <tr>
-    <th hidden>Request ID</th>
-    <th hidden>Tracking Id</th>
-    <th>Request Date</th>
-    <th>Full name</th>
-    <th hidden>request type</th>
-    <th>Purpose</th>
-    <th>Get Day</th>
-    <th hidden>Payment Method</th>
-    <th>Payment Status</th>
-    <th>Request Status</th>
-    <th hidden>username</th>
-    <th>Update</th>
+    <th class="text-center" hidden>Request ID</th>
+    <th class="text-center" hidden>Tracking Id</th>
+    <th class="text-center">Date Requested</th>
+    <th class="text-center">Full name</th>
+    <th class="text-center" hidden>request type</th>
+    <th class="text-center" col-2>Purpose</th>
+    <th class="text-center">Get Day</th>
+    <th class="text-center" hidden>Payment Method</th>
+    <th class="text-center" hidden>Payment Status</th>
+    <th class="text-center" hidden>Request Status</th>
+    <th class="text-center" hidden>email</th>
+    <th class="text-center">Update</th>
   </tr>
 </thead>
 
@@ -186,18 +224,19 @@ if($total_data > 0)
     $output .= '
     <tbody id="myTable">
       <tr>
-        <td hidden>'.$row["req_id"].'</td>
-        <td hidden>'.$row["tracking_id"].'</td>
-        <td>'.$row["req_date"].'</td>
-        <td>'.$row["fullname"].'</td>
-        <td hidden>'.$row["request_type"].'</td>
-        <td>'.$row["purpose"].'</td>
-        <td>'.$row["get_date"].'</td>
-        <td hidden>'.$row["payment_method"].'</td>
-        <td>'.$row["payment_status"].'</td>
-        <td>'.$row["request_status"].'</td>
-        <td hidden>'.$row["username"].'</td>
-        <td>'.'<button type="button" style="width:100%;" class="btn editbtn"><i class="fas fa-user-edit" style="font-size:20px;"></i></button>'.'</td>
+        <td class="text-center" hidden>'.$row["req_id"].'</td>
+        <td class="text-center" hidden>'.$row["tracking_id"].'</td>
+        <td class="text-center">'.date("F d, Y - l", strtotime($row["req_date"])).'</td>
+        <td class="text-center">'.$row["fullname"].'</td>
+        <td class="text-center" hidden>'.$row["request_type"].'</td>
+        <td class="text-center">'.$row["purpose"].'</td>
+        <td class="text-center">'.date("F d, Y - l", strtotime($row["get_date"])).'</td>
+        <td class="text-center" hidden>'.$row["payment_method"].'</td>
+        <td class="text-center" hidden>'.$row["date_paid"].'</td>
+        <td class="text-center" hidden>'.$row["payment_status"].'</td>
+        <td class="text-center" hidden>'.$row["request_status"].'</td>
+        <td class="text-center" hidden>'.$row["email"].'</td>
+        <td class="text-center">'.'<button type="button" style="width:auto;margin-right:5px" class="btn editbtn btn-success">Get Record</button><button type="button" style="width:auto;" class="btn disbtn btn-danger">Dissapproved</button>'.'</td>
       </tr>
     </tbody>
     
@@ -216,7 +255,7 @@ else
 $output .= '
 </table>
 <br />
-<div align="center">
+<div align="center" style="float:right">
   <ul class="pagination">
 ';
 
@@ -330,7 +369,7 @@ for($count = 0; $count < count($page_array); $count++)
 }
 
 $output .= $previous_link .'<li class="page-item">
-<p class="page-link" style="pointer-events: none; cursor: default;">'.$page.'</p>
+<p class="page-link" style="pointer-events: none; cursor: default;color:#27329b;"><b>Page '.$page.'</b></p>
 </li>'. $next_link;
 $output .= '
   </ul>

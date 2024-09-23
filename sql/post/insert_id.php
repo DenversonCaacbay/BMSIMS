@@ -10,13 +10,13 @@
     $req_date = '';
     $get_date = '';
     $reference_no = '';
-    $username = '';
+    $email = '';
  
     if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $username = $_POST['username'];
+        $email = $_POST['email'];
         $reference_no = $_POST['reference_no'];
          // check for dup prod name
-         $searchDate = "SELECT * FROM tbl_request WHERE username='".$username."' AND request_type='Barangay ID' AND request_status = 'Please Wait'";
+         $searchDate = "SELECT * FROM tbl_request WHERE email='".$email."' AND request_type='Barangay ID' AND request_status = 'Pending'";
          $searchRef = "SELECT * FROM tbl_request WHERE reference_no = '".$reference_no."'";
          $statement1 = $pdo->query($searchDate);
         //  $statement2 = $pdo->query($searchGet);
@@ -65,8 +65,8 @@
 
         else{
  
-            $sql = 'INSERT INTO tbl_request(tracking_id,req_date, fullname, request_type, purpose, date_open, date_close, get_date, payment_method,reference_no,amount,date_paid, payment_status, request_status,username) 
-            VALUES (:tracking_id,:req_date ,:fullname, :request_type, :purpose, :date_open, :date_close, :get_date, :payment_method,:reference_no,:amount,:date_paid, :payment_status, :request_status,:username)';
+            $sql = 'INSERT INTO tbl_request(tracking_id,req_date, fullname, request_type, purpose, notify, address, contact, date_open, date_close, get_date, payment_method,reference_no,amount,date_paid, payment_status, request_status,email) 
+            VALUES (:tracking_id,:req_date ,:fullname, :request_type, :purpose, :notify, :address, :contact, :date_open, :date_close, :get_date, :payment_method,:reference_no,:amount,:date_paid, :payment_status, :request_status,:email)';
 
             $statement = $pdo->prepare($sql);
 
@@ -77,6 +77,9 @@
                 'fullname' => 'zzz',
                 'request_type' => 'zzz',
                 'purpose' => 'zzz',
+                'notify' => 'zzz',
+                'address' => 'zzz',
+                'contact' => 'zzz',
                 'date_open' => 'zzz',
                 'date_close' => 'zzz',
                 'get_date' => 'zzz',
@@ -86,13 +89,16 @@
                 'date_paid' => 'zzz',
                 'payment_status' => 'zzz',
                 'request_status' => 'zzz',
-                'username' => 'zzz',
+                'email' => 'zzz',
             ];
             $statement->bindParam(':tracking_id', $newProd['tracking_id']);
             $statement->bindParam(':req_date', $newProd['req_date']);
             $statement->bindParam(':fullname', $newProd['fullname']);
             $statement->bindParam(':request_type', $newProd['request_type']);
             $statement->bindParam(':purpose', $newProd['purpose']);
+            $statement->bindParam(':notify', $newProd['notify']);
+            $statement->bindParam(':address', $newProd['address']);
+            $statement->bindParam(':contact', $newProd['contact']);
             $statement->bindParam(':date_open', $newProd['date_open']);
             $statement->bindParam(':date_close', $newProd['date_close']);
             $statement->bindParam(':get_date', $newProd['get_date']);
@@ -102,7 +108,7 @@
             $statement->bindParam(':date_paid', $newProd['date_paid']);
             $statement->bindParam(':payment_status', $newProd['payment_status']);
             $statement->bindParam(':request_status', $newProd['request_status']);
-            $statement->bindParam(':username', $newProd['username']);        
+            $statement->bindParam(':email', $newProd['email']);        
    
 
             //change
@@ -111,6 +117,9 @@
             $newProd['fullname'] = $_POST['fullname'];
             $newProd['request_type'] = $_POST['request_type'];
             $newProd['purpose'] = $_POST['purpose'];
+            $newProd['notify'] = $_POST['notify'];
+            $newProd['address'] = $_POST['address'];
+            $newProd['contact'] = $_POST['contact'];
             $newProd['date_open'] = $_POST['date_open'];
             $newProd['date_close'] = $_POST['date_close'];
             $newProd['get_date'] = $_POST['get_date'];
@@ -142,7 +151,7 @@
             $newProd['date_paid'] = $_POST['date_paid'];
             $newProd['payment_status'] = $_POST['payment_status'];
             $newProd['request_status'] = $_POST['request_status'];
-            $newProd['username'] = $_POST['username'];
+            $newProd['email'] = $_POST['email'];
 
 
             // execute query

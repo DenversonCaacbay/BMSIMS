@@ -6,89 +6,88 @@
 <?php 
     $pdo = require '../config/connection.php';
     
-    $username = '';
+    $email = '';
     if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $username = $_POST['username'];
-        $imgData = addslashes(file_get_contents($_FILES['image']['tmp_name']));
-        $imageProperties = getimageSize($_FILES['image']['tmp_name']);
-        $imgData1 = addslashes(file_get_contents($_FILES['profile_pic']['tmp_name']));
-        $imageProperties = getimageSize($_FILES['profile_pic']['tmp_name']);
+        $email = $_POST['email'];
+        $imgData = addslashes(file_get_contents($_FILES['validation']['tmp_name']));
+        $imageProperties = getimageSize($_FILES['validation']['tmp_name']);
+        $imgData1 = addslashes(file_get_contents($_FILES['pic']['tmp_name']));
+        $imageProperties = getimageSize($_FILES['pic']['tmp_name']);
 
         //Checking if username is already taken
-        $searchProduct = "SELECT * FROM tbl_resident WHERE username = '".$username."' ";
+        $searchProduct = "SELECT * FROM resident_accounts WHERE email = '".$email."' ";
         $statement = $pdo->query($searchProduct);
         $productInfo = $statement->fetchAll(PDO::FETCH_ASSOC);
         $countProd = $statement->rowCount(); 
         if($countProd > 0){
-            echo "<script>alert('Username already existed!');
-            window.location.href='../user_index.php';
+            echo "<script>alert('Email already existed!');
+            window.location.href='../../user/user_register.php';
             </script>";
         }
         else{
             // insert resident
-            $sql = 'INSERT INTO tbl_resident(admin_power,profile_pic, username, firstname, middlename, lastname, gender, place_of_birth, bdate, civil_status,address, purok, email,phone,image, password) VALUES (:admin_power,"'.$imgData1.'", :username ,:firstname, :middlename, :lastname, :gender, :place_of_birth, :bdate, :civil_status, :address, :purok, :email, :phone, "'.$imgData.'",  :password)';
+            $sql = 'INSERT INTO resident_accounts(access, pic, fname, mname, lname, gender, pob, bdate, age, status, street, purok, email, contact, validation, password) VALUES (:access, "'.$imgData1.'" ,:fname, :mname, :lname, :gender, :pob, :bdate, :age, :status, :street, :purok, :email, :contact, "'.$imgData.'", :password)';
             $statement = $pdo->prepare($sql);
             $newProd = [
-                'admin_power' => 'zzz',
-                'profile_pic' => 'zzz',
-                'username' => 'zzz',
-                'firstname' => 'zzz',
-                'middlename' => 'zzz',
-                'lastname' => 'zzz',
+                'access' => 'Not Yet Approve',
+                'pic' => 'zzz',
+                'fname' => 'zzz',
+                'mname' => 'zzz',
+                'lname' => 'zzz',
                 'gender' => 'placeholder',
-                'place_of_birth' => 'zzz',
+                'pob' => 'zzz',
                 'bdate' => 'zzz',
-                'civil_status' => 'zzz',
-                'address' => 'zzz',
+                'age' => 'zzz',
+                'status' => 'zzz',
+                'street' => 'zzz',
                 'purok' => 'zzz',
                 'email' => 'zzz',
                 'phone' => 'zzz',
-                'image' => 'zzz',
+                'validation' => 'zzz',
                 'password' => 999,
                 
                 
             ];
-            $statement->bindParam(':admin_power', $newProd['admin_power']);
-            $statement->bindParam(':username', $newProd['username']);
-            $statement->bindParam(':firstname', $newProd['firstname']);
-            $statement->bindParam(':middlename', $newProd['middlename']);
-            $statement->bindParam(':lastname', $newProd['lastname']);
+            $statement->bindParam(':access', $newProd['access']);
+            // $statement->bindParam(':username', $newProd['username']);
+            $statement->bindParam(':fname', $newProd['fname']);
+            $statement->bindParam(':mname', $newProd['mname']);
+            $statement->bindParam(':lname', $newProd['lname']);
             $statement->bindParam(':gender', $newProd['gender']);
-            $statement->bindParam(':place_of_birth', $newProd['place_of_birth']);
+            $statement->bindParam(':pob', $newProd['pob']);
             $statement->bindParam(':bdate', $newProd['bdate']);
-            $statement->bindParam(':civil_status', $newProd['civil_status']);
-            $statement->bindParam(':address', $newProd['address']);
+            $statement->bindParam(':age', $newProd['age']);
+            $statement->bindParam(':status', $newProd['status']);
+            $statement->bindParam(':street', $newProd['street']);
             $statement->bindParam(':purok', $newProd['purok']);
             $statement->bindParam(':email', $newProd['email']);
-            $statement->bindParam(':phone', $newProd['phone']);
+            $statement->bindParam(':contact', $newProd['contact']);
             // $statement->bindParam(':image', $newProd['image']);
             $statement->bindParam(':password', $newProd['password']);
             
 
                 //change
-            $newProd['admin_power'] = $_POST['admin_power'];
-            $newProd['username'] = $_POST['username'];
-            $newProd['firstname'] = $_POST['firstname'];
-            $newProd['middlename'] = $_POST['middlename'];
-            $newProd['lastname'] = $_POST['lastname'];
+            // $newProd['admin_power'] = $_POST['admin_power'];
+            if(empty($_POST['access']))
+            {
+                $_POST['access'] = "";
+            }
+            // $newProd['username'] = $_POST['username'];
+            $newProd['fname'] = $_POST['fname'];
+            $newProd['mname'] = $_POST['mname'];
+            $newProd['lname'] = $_POST['lname'];
             $newProd['gender'] = $_POST['gender'];
-            $newProd['place_of_birth'] = $_POST['place_of_birth'];
+            $newProd['pob'] = $_POST['pob'];
             $newProd['bdate'] = $_POST['bdate'];
-            $newProd['civil_status'] = $_POST['civil_status'];
-            $newProd['address'] = $_POST['address'];
+            $newProd['age'] = $_POST['age'];
+            $newProd['status'] = $_POST['status'];
+            $newProd['street'] = $_POST['street'];
             $newProd['purok'] = $_POST['purok'];
             $newProd['email'] = $_POST['email'];
-            $newProd['phone'] = $_POST['phone'];
-
-            // $imgData = addslashes(file_get_contents($_FILES['image']['tmp_name']));
-            // $imageProperties = getimageSize($_FILES['image']['tmp_name']);
-
-            // $newProd['image'] = $imgData;
-
-
+            $newProd['contact'] = $_POST['contact'];
             $newProd['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
            
-                //execute query
+            //execute query
             $statement->execute();
             echo'
             <script type="text/javascript">

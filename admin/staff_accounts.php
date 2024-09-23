@@ -1,6 +1,14 @@
 <?php
 require '../sql/auth/account_check2.php';
-                           
+// require '../sql/auth/account_user_check.php'; 
+session_start(); // Start the session
+
+// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+//     // Redirect the user to user_index.php
+//     header("Location: ../ad_index.php");
+//     exit;
+// }
+                        
 ?>
 <!DOCTYPE html>
 <html>
@@ -53,9 +61,17 @@ require '../sql/auth/account_check2.php';
   <p class="text-light font-weight-bold text-uppercase px-3 small pb-4 mb-0"></p>
 
   <ul class="nav flex-column mb-0">
+  <p class="text-light font-weight-bold">Menu</p>
+  <li class="nav-item">
+      <a href="dashboard.php" class="nav-link text-light">
+      <i class="fas fa-home  mr-3 text-light fa-fw"></i>
+               Dashboard
+            </a>
+    </li>
+    <hr class="text-light">
   <p class="text-light font-weight-bold">Account Manager</p>
     <li class="nav-item">
-      <a href="staff_accounts.php" class="nav-link hover-dark text-light">
+      <a href="staff_accounts.php" class="nav-link hover-dark  text-light">
       <i class="fas fa-user  mr-3 text-light fa-fw"></i>
                 Staff Account
             </a>
@@ -67,7 +83,7 @@ require '../sql/auth/account_check2.php';
             </a>
     </li>
     <li class="nav-item">
-      <a href="resident_accounts.php" class="nav-link text-light">
+      <a href="pending_accounts.php" class="nav-link text-light">
       <i class="fas fa-user  mr-3 text-light fa-fw"></i>
                 Residents Account
             </a>
@@ -86,24 +102,27 @@ require '../sql/auth/account_check2.php';
                 Payment History
             </a>
     </li>
-    <li class="nav-item">
-      <a href="logs.php" class="nav-link text-light">
-      <i class="fas fa-history mr-3 text-light fa-fw"></i>
-                Logs
-            </a>
-    </li>
+    <!--<li class="nav-item">-->
+    <!--  <a href="logs.php" class="nav-link text-light">-->
+    <!--  <i class="fas fa-history mr-3 text-light fa-fw"></i>-->
+    <!--            Logs-->
+    <!--        </a>-->
+    <!--</li>-->
 
 
 
     <!---->
 
-    <li class="nav-item" style="margin-top:30.5vh">
-      <a href="../sql/auth/account_logout.php" class="nav-link nav-link1 text-light">
-      <i class="fas fa-sign-out-alt mr-3 text-light fa-fw"></i>
-                Logout
+    <li class="nav-item p-5">
+      <a href="../sql/auth/account_logout.php" class="nav-link nav-link1 text-center text-light">
+      <!-- <i class="fas fa-sign-out-alt text-light fa-fw" style="font-size:30px;"></i> -->
+      <!--<img width="30" height="30" src="https://img.icons8.com/ios/50/FFFFFF/logout-rounded-left.png" alt="logout-rounded-left"/>-->
+       <img width="30" height="30" src="../images/icons/logout_button_white.png" alt="logout-rounded-left"/>
             </a>
     </li>
   </ul>
+
+</div>
 
 </div>
 <!-- End vertical navbar -->
@@ -192,7 +211,7 @@ require '../sql/auth/account_check2.php';
 
                 <form action="../sql/account_admin/staff_forgot_password.php" method="POST">
                 <div class="modal-body">
-                  <input type="text" name="update" id="update_id" required>
+                  <input type="hidden" name="update" id="update_id" required>
                   <div class="row">
                     <div class="mb-3 password-container">
                       <label>Password</label>
@@ -243,7 +262,7 @@ require '../sql/auth/account_check2.php';
 
                         <input type="hidden" name="delete" id="delete_id">
 
-                        <h4> Do you want to Delete this Account?</h4>
+                        <h4> Do you want to Remove this Account?</h4>
                         <input type="text" name="acc_id" value="<?php echo $_SESSION['user_id'] ?>" hidden>
                         <input type="text" name="staff" value="<?php echo $_SESSION['fullname'] ?>" hidden>
                         <input type="text" name="username" id="username1" class="form-control" hidden>
@@ -261,67 +280,33 @@ require '../sql/auth/account_check2.php';
             </div>
         </div>
     </div>
-<!-- Delete Modal
-<div class="modal fade" id="removemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 style="font-weight:600; margin: 10px;"id="exampleModalLabel">Do you want to remove this staff?</h3>
-                <button type="button" style="background: #27329b; color:white;" class="btn" data-dismiss="modal" aria-label="Close">
-                    X
-                </button>
-            </div>
-
-            <form action="../sql/account_admin/account_delete.php" method="POST">
-                <div class="modal-body">
-                    <input type="text" name="acc_id" id="acc_id" >
-                    <input type="text" name="remove" id="remove" class="form-control">
-
-                    <input type="text" name="acc_id" value="<?php echo $_SESSION['user_id'] ?>">
-                    <input type="text" name="staff" value="<?php echo $_SESSION['fullname'] ?>">
-                    <input type="text" name="fullname" id="fullname" class="form-control">
-                    <input type="text" name="date_config" value="<?php echo date("Y-m-d"); ?>">
-                    <input type="text" name="status" class="form-control" placeholder="" value="Deleted">
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"> NO </button>
-                    <button type="submit" name="updatedata" style="background: #27329b; color:white;" class="btn successbtn">Remove</button>
-                    
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div> -->
 
 <!-- Page content holder -->
-<div class="page-content p-4" id="content">
+<div class="page-content p-0" id="content">
   <!-- Toggle button -->
-  <div class="row nav1 mb-3">
-
-    <div class="col-8">
-        <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button>
-    </div>
-    <div class="col-4">
-        <div class="media d-flex align-items-center top-header">
-            <img loading="lazy" src="../images/profile.png" alt="..." width="30" height="30">
-            <div class="media-body">
-                <a class="user-style"  href="#" ><?php echo $_SESSION['fullname'] ?></a>
+  <div class="row nav1 mb-1">
+        <div class="col-9">
+            <!-- <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button> -->
+        </div>
+        <div class="col-3 mt-2 align-items-right">
+            <div class="d-flex top-header ">
+                <img loading="lazy" src="../images/profile.png" alt="..." width="30" height="30">
+                <div class="media-body">
+                    <a class="user-style"  href="#"><?php echo $_SESSION['fullname'] ?></a>
+                </div>
             </div>
         </div>
     </div>
-    
-  </div>
   <div class="separator"></div>
   <div class="header">
         <div class="card-body">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-10" style="margin-top:8px">
-                    Staff Account <i class="fas fa-user  mr-3 fa-fw"></i>
+                    <b>Staff Account</b> <i class="fas fa-user  mr-3 fa-fw"></i>
                     </div>
                     <div class="col-lg-2">
-                    <button type="button" class="btn btn-custom" style="width:100%" data-toggle="modal" data-target="#studentaddmodal">
+                    <button type="button" class="btn btn-custom" style="float:right;" data-toggle="modal" data-target="#studentaddmodal">
                          Add Account
                     </button>
                     </div>

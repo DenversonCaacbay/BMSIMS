@@ -1,8 +1,15 @@
-
+<style>
+  .table{
+  overflow: hidden;
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.1);;
+  }
+</style>
 <?php
 
 
-$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
+$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
 
 $page_array=array(); 
 $limit = '9';
@@ -54,11 +61,11 @@ $total_filter_data = $statement->rowCount();
 $output = '
 <table class="table sticky">
   <tr>
-    <th hidden>Request ID</th>
-    <th>Name</th>
-    <th>Date</th>
-    <th>Type</th>
-    <th hidden>Action</th>
+    <th class="text-center" hidden>Request ID</th>
+    <th class="text-center">Name</th>
+    <th class="text-center">Date</th>
+    <th class="text-center">Type</th>
+    <th class="text-center" hidden>Action</th>
   </tr>
 ';
 
@@ -72,10 +79,10 @@ if($total_data > 0)
     $output .= '
     
     <tr>
-      <td hidden>'.$row["log_id"].'</td>
-      <td>'.$row["fullname"].'</td>
-      <td>'.date("F d, Y - l [g:i:s A]", strtotime($row["date"])).'</td>
-      <td>'.$row["type"].'</td>
+      <td class="text-center" hidden>'.$row["log_id"].'</td>
+      <td class="text-center">'.$row["fullname"].'</td>
+      <td class="text-center">'.date("F d, Y - l [g:i:s A]", strtotime($row["date"])).'</td>
+      <td class="text-center">'.$row["type"].'</td>
     </tr>
     ';
   }
@@ -92,7 +99,7 @@ else
 $output .= '
 </table>
 <br />
-<div align="center">
+<div align="center" style="float:right">
   <ul class="pagination">
 ';
 
@@ -208,8 +215,9 @@ for($count = 0; $count < count($page_array); $count++)
 }
 
 $output .= $previous_link .'<li class="page-item">
-  <p class="page-link" style="pointer-events: none; cursor: default;">'.$page.'</p>
-  </li>'. $next_link;
+<p class="page-link" style="pointer-events: none; cursor: default;color:#27329b;"><b>Page '.$page.'</b></p>
+</li>'
+. $next_link;
 $output .= '
   </ul>
 

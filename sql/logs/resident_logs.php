@@ -120,7 +120,7 @@
 <?php
 
 
-$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
+$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
 
 $page_array=array(); 
 $limit = '9';
@@ -188,8 +188,8 @@ if($total_data > 0)
       <td>'.$row["log_id"].'</td>
       <td>'.$row["firstname"].'</td>
       <td>'.$row["lastname"].'</td>
-      <td>'.date("F d, Y - l [g:i:s A]", strtotime($row["date"])).'</td>
-      <td>'.$row["admin_power"].'</td>
+      <td>'.date("F d, Y - l", strtotime($row["date_config"])).'</td>
+      <td>'.$row["status"].'</td>
     ';
   }
 }

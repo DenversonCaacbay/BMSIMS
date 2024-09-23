@@ -1,27 +1,25 @@
+<style>
+.table {
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: -4px -4px 15px rgba(255,255,255,0.3),
+        4px 4px 15px rgba(0,0,0,0.1);
+}
+.table th td{
+    text-align:center;
+  }  
+.table h5{
+    font-size: 15px;
+    color:#fff;
+    text-align:center;
+    padding:5px;
+    border-radius: 50px;
+  }
+
+</style>
+
 <html>
-    <!-- DELETE POP UP FORM (Bootstrap MODAL) -->
-    <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
 
-                <form action="../sql/user_requests/request_cancel.php" method="POST">
-
-                    <div class="modal-body">
-
-                        <input type="hidden" name="delete" id="delete_id">
-
-                        <h4 style="text-align:left;">Do you want to Cancel Request?</h4>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-custom" data-dismiss="modal"> NO </button>
-                        <button type="submit" name="deletedata" class="btn btn-custom"> YES</button>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
@@ -51,7 +49,7 @@
 <?php
 session_start();
 
-$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
+$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
 
 $page_array=array(); 
 $limit = '1000000';
@@ -67,13 +65,13 @@ else
 }
 
 $query = "
-SELECT * FROM tbl_request WHERE username='$_SESSION[username]'
+SELECT * FROM tbl_request WHERE email='$_SESSION[email]' AND request_status='Pending'
 ";
 
 if($_POST['query'] != '')
 {
   $query .= '
-  WHERE request_type LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
+  AND request_type LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
   ';
 }
 
@@ -94,14 +92,14 @@ $output = '
 
 <table class="table sticky">
   <tr>
-    <th style="color:white" hidden>Request Id</th>
-    <th style="color:white">Date Requested</th>
-    <th style="color:white">Request Type</th>
-    <th style="color:white">Get Day</th>
-    <th style="color:white">Payment Method</th>
-    <th style="color:white">Payment Status</th>
-    <th style="color:white">Request Status</th>
-    <th style="color:white">Cancel</th>
+    <th class="text-center" style="color:white" hidden>Request Id</th>
+    <th class="text-center" style="color:white">Date Requested</th>
+    <th class="text-center" style="color:white">Request Type</th>
+    <th class="text-center" style="color:white">Get Day</th>
+    <th class="text-center" style="color:white">Payment Method</th>
+    <th class="text-center" style="color:white">Payment Status</th>
+    <th class="text-center" style="color:white">Request Status</th>
+    <th class="text-center" style="color:white">Cancel</th>
   </tr>
 ';
 if($total_data > 0)
@@ -110,18 +108,23 @@ if($total_data > 0)
   {
     $output .= '
     <tr>
-      <td style="color:#27329b" hidden>'.$row["req_id"].'</td>
-      <td style="color:#27329b">'.$row["req_date"].'</td>
-      <td style="color:#27329b">'.$row["request_type"].'</td>
-      <td style="color:#27329b">'.$row["get_date"].'</td>
-      <td style="color:#27329b">'.$row["payment_method"].'</td>
-      <td style="color:#27329b">'.$row["payment_status"].'</td>
-      <td style="color:#27329b">'.$row["request_status"].'</td>
+      <td class="text-center" style="color:#27329b" hidden>'.$row["req_id"].'</td>
+      <td class="text-center" style="color:#27329b">'.date("F d, Y - l", strtotime($row["req_date"])).'</td>
+      <td class="text-center" style="color:#27329b">'.$row["request_type"].'</td>
+      <td class="text-center" style="color:#27329b">'.date("F d, Y - l", strtotime($row["get_date"])).'</td>
+      <td class="text-center" style="color:#27329b">'.$row["payment_method"].'</td>
+      <td class="text-center" style="color:#27329b">'.$row["payment_status"].'</td>
     ';
-    if($row["request_status"] == "Please Wait"){
-      $output .= '<td>'.'<button type="button" class="btn btn-status deletebtn"><i class="fas text-danger fa-trash"></i></button>'.'</td></tr>';
+    if($row["request_status"] == "Pending"){
+
+      $output .= '
+      <td><h5 class="bg-danger">'.$row["request_status"].'</h5></td>
+      <td class="text-center">'.'<button type="button" class="btn btn-status deletebtn"><i class="fas text-danger fa-trash"></i></button>'.'</td></tr>';
     }else {
-      $output .= '</tr>';
+      $output .= '
+      <td><h5 class="bg-warning">'.$row["request_status"].'</h5></td>
+      <td></td>
+      </tr>';
     };
   }
 } 
@@ -129,7 +132,7 @@ else
 {
   $output .= '
   <tr>
-    <td colspan="7" align="center">No Data Found</td>
+    <td colspan="7" align="center">No Request Found</td>
   </tr>
   ';
 }

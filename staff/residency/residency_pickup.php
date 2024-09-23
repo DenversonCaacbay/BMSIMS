@@ -1,6 +1,31 @@
 <?php
-require '../../sql/auth/account_staff_check.php';
-                           
+session_start(); // Start the session
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Redirect the user to user_index.php
+    header("Location: ../../ad_index.php");
+    exit;
+}                           
+?>
+<?php
+$host = 'localhost';
+$db = 'u622464203_bmsims';
+$user = 'u622464203_bmsims';
+$pass = 'Bmsims2023';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // echo "Connected to database successfully!";
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?>
+
+<?php
+    $query = "SELECT * FROM tbl_request WHERE request_status = 'Pending'";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html>
@@ -51,16 +76,19 @@ require '../../sql/auth/account_staff_check.php';
       <a href="../menu.php" class="nav-link  hover-dark  text-light">
       <i class="fas fa-folder  mr-3 text-light fa-fw" style="font-size:20px"></i>
                 List of Request
+                <?php if (!empty($entries)): ?>
+                <i class="fas fa-exclamation-circle" style="margin-left:50px;font-size:18px;color: #fff;"></i> <!-- Red dot or any other indicator -->
+              <?php endif; ?>
             </a>
 </li>
 
 
     <!---->
 
-    <li class="nav-item" style="margin-top:55vh">
-    <a href="../../sql/auth/staff_account_logout.php" class="nav-link nav-link1 text-light">
-      <i class="fas fa-sign-out-alt mr-3 text-light fa-fw" style="font-size:20px"></i>
-                Logout
+    <li class="nav-item text-center mb-4" style="position:fixed;bottom:0;margin-left:6%;">
+    <a href="../../sql/auth/staff_account_logout.php" class="nav-link nav-link1 text-center text-light">
+    <img width="30" height="30" src="https://img.icons8.com/ios/50/FFFFFF/logout-rounded-left.png" alt="logout-rounded-left"/>
+               
             </a>
     </li>
   </ul>
@@ -76,7 +104,7 @@ require '../../sql/auth/account_staff_check.php';
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-weight:600; margin: 10px;"id="exampleModalLabel">Updating Status...</h3>
+                <h3 style="font-weight:600; margin: 10px;"id="exampleModalLabel"></h3>
                 <button type="button" style="background: #27329b; color:white;" class="btn" data-dismiss="modal" aria-label="Close">
                     X
                 </button>
@@ -84,6 +112,7 @@ require '../../sql/auth/account_staff_check.php';
 
             <form action="../../sql/fetch/request_record/pickup/request_residency_update.php" method="POST">
                 <div class="modal-body">
+                <h5>Proceed this request from getting record?</h5>
                     <input type="text" name="staff" value="<?php echo $_SESSION['fullname'] ?>" hidden>
                     <input type="text" name="req_id" id="req_id" hidden>
                     <input type="text" name="tracking_id" id="tracking_id" class="form-control" placeholder="" hidden>
@@ -104,28 +133,20 @@ require '../../sql/auth/account_staff_check.php';
                                 <label>Date Paid</label>
                                 <input style="padding:13px;" class="form-control form-select" type="date" name="date_paid" value="<?php echo date("Y-m-d"); ?>">
                             </div>
-                    <div class="col-sm-12 form-group" style="margin-top: 10px">
-                        <label>Payment Status</label>
-                        <select style="padding:13px;" class="form-control form-select" name="payment_status" id="inputGroupSelect01" required>
-                            <option selected id="payment_status" value=""></option>
-                            <option value="Not Paid">Not Paid</option>
-                            <option value="Paid">Paid</option>
-                        </select>
-                    </div>
-                            <div class="col-sm-12 form-group" style="margin-top: 10px">
+                            <div class="col-sm-12 form-group" style="margin-top: 10px" hidden>
+                                <label>Payment Status</label>
+                                <input type="text" name="payment_status" value="Paid" class="form-control" readonly>
+                            </div>
+                            <div class="col-sm-12 form-group" style="margin-top: 10px" hidden>
                               <label>Request Status</label>
-                              <select style="padding:13px;" class="form-control form-select" name="request_status" id="request_status inputGroupSelect01" required>
-                                    <option selected value=""></option>
-                                    <option value="Not Approved">Not Approved</option>
-                                    <option value="Get Record">Get Record</option>
-                                </select>
+                              <input type="text" name="request_status" value="Get Record" class="form-control" readonly>
                             </div>
                             <input type="text" name="username" id="username" class="form-control" placeholder="" hidden>
                             <input type="text" name="date_config" value="<?php echo date("Y-m-d"); ?>" hidden>
                             <input type="text" name="status" class="form-control" placeholder="" value="Updated" hidden>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" name="updatedata" style="background: #27329b; color:white;width: 100%" class="btn successbtn">Update</button>
+                    <button type="submit" name="updatedata" style="background: #27329b; color:white;width: 100%" class="btn successbtn">Get Record</button>
                 </div>
             </form>
 
@@ -133,6 +154,61 @@ require '../../sql/auth/account_staff_check.php';
     </div>
 </div>
     <!--End of Edit Modal-->
+     <!-- Dissapproved POP UP FORM (Bootstrap MODAL) -->
+     <div class="modal fade" id="dismodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-weight:600; margin: 10px;"id="exampleModalLabel"></h3>
+                <button type="button" style="background: #27329b; color:white;" class="btn" data-dismiss="modal" aria-label="Close">
+                    X
+                </button>
+            </div>
+
+            <form action="../../sql/fetch/request_record/pickup/dis_residency.php" method="POST">
+                <div class="modal-body">
+                  <h5>Dissapproved this request</h5>
+                    <input type="text" name="staff" value="<?php echo $_SESSION['fullname'] ?>" hidden>
+                    <input type="text" name="req_id" id="req_id1" hidden>
+                    <input type="text" name="tracking_id" id="tracking_id1" class="form-control" placeholder="" hidden>
+                    <input type="text" name="req_date" id="req_date1" class="form-control" placeholder="" hidden>
+                    <input type="text" name="fullname" id="fullname1" class="form-control" placeholder=""hidden >
+                    <input type="text" name="request_type" id="request_type1" class="form-control" placeholder="" hidden>
+                    <input type="text" name="purpose" id="purpose1" class="form-control" placeholder="" hidden>
+                    <input type="text" name="date_open" id="date_open1" class="form-control" placeholder="" hidden>
+                    <input type="text" name="date_close" id="date_close1" class="form-control" placeholder="" hidden>
+                    <input type="text" name="get_date" id="get_date1" class="form-control" placeholder="" hidden>
+                    <input type="text" name="payment_method" id="payment_metho1d" class="form-control" placeholder="" hidden>
+                    <input type="text" name="reference_no" id="reference_no1" class="form-control" placeholder="" hidden>
+                    <div class="col-12" hidden>
+                        <label>Amount</label>
+                        <input type="text" name="amount" value="50" class="form-control" >
+                    </div>
+                    <div class="col-md-12 form-group mb-3" hidden>
+                      <label>Date Paid</label>
+                      <input style="padding:13px;" class="form-control" type="text" name="date_paid" value="<?php echo date("Y-m-d"); ?>">
+                    </div>
+                    <div class="col-12" hidden>
+                        <label>Payment Status</label>
+                        <input type="text" name="payment_status" value="Not Paid" class="form-control">
+                    </div>
+                    <div class="col-12" hidden>
+                        <label>Request Status</label>
+                        <input type="text" name="request_status" value="Disapproved" class="form-control">
+                    </div>
+                            <input type="text" name="username" id="username" class="form-control" placeholder="" hidden>
+                            <input type="text" name="date_config" value="<?php echo date("Y-m-d"); ?>" hidden>
+                            <input type="text" name="status" class="form-control" placeholder="" value="Updated" hidden>
+                </div>
+                <div class="modal-footer">
+                    <button  style="background: #27329b; color:white;" class="btn successbtn" data-dismiss="modal" aria-label="Close">No</button>
+                    <button type="submit" name="updatedata" style="background: #27329b; color:white;" class="btn successbtn">Yes</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 
 <!-- END OF PICK UP -->
 
@@ -142,7 +218,7 @@ require '../../sql/auth/account_staff_check.php';
   <div class="row nav1 mb-1">
 
     <div class="col-8">
-        <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button>
+        <!-- <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button> -->
     </div>
     <div class="col-4 mt-2 align-items-right">
         <div class="d-flex top-header ">
@@ -164,14 +240,9 @@ require '../../sql/auth/account_staff_check.php';
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-10" style="font-size:2rem">
-                        Residency
+                        <b>Residency</b>
                         </div>
-                        <div class="col-sm-2">
-                          <div class="tab">
-                            <a href="residency_pickup.php" class="btn btn-custom btn-active tablinks">Pick Up</a>
-                            <a href="residency_gcash.php" class="btn btn-custom tablinks">Gcash</a>
-                        </div>
-                        </div>
+                        
                     </div>
                 </div>
                 <hr class="mt-2" style="margin:10px">
@@ -181,10 +252,11 @@ require '../../sql/auth/account_staff_check.php';
         <div class="container mb-3">
         <nav style="margin-left:15px;--bs-breadcrumb-divider: '|';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item" aria-current="page"><a href="residency_pickup.php" class="link-active">All Request</a></li>
+                <li class="breadcrumb-item" aria-current="page"><a href="residency_pickup.php" class="link-active">Pending Request</a></li>
                 <!-- <li class="breadcrumb-item"><a href="residency_pickup/processed.php">Processed</a></li> -->
                 <li class="breadcrumb-item"><a href="residency_pickup/get_record.php">Get Record</a></li>
                 <li class="breadcrumb-item"><a href="residency_pickup/done.php">Done</a></li>
+                <li class="breadcrumb-item"><a href="residency_pickup/disapproved.php">Disapproved</a></li>
             </ol>
         </nav>
             <div class="card-req">

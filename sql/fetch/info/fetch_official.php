@@ -1,9 +1,16 @@
-
+<style>
+    .table{
+      overflow: hidden;
+      border: 1px solid black;
+      border-radius: 10px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.1);;
+    }
+</style>
 <html>
 
 <!-- EDIT POP UP FORM (Bootstrap MODAL) -->
 
-
+ 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function () {
@@ -20,12 +27,12 @@
 
                 console.log(data);
                 $('#official_id').val(data[0]);
-                $('#position').val(data[1]);
-                $('#firstname').val(data[2]);
-                $('#middlename').val(data[3]);    
-                $('#lastname').val(data[4]);
-                $('#phone').val(data[5]);
-                $('#purok').val(data[6]);
+                $('#position').val(data[2]);
+                $('#firstname').val(data[3]);
+                $('#middlename').val(data[4]);    
+                $('#lastname').val(data[5]);
+                // $('#phone').val(data[5]);
+                // $('#purok').val(data[6]);
                 
             });
         });
@@ -63,7 +70,7 @@
 <?php
 
 
-$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
+$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
 
 $page_array=array(); 
 $limit = '5';
@@ -87,6 +94,9 @@ if($_POST['query'] != '')
 {
   $query .= '
   WHERE firstname LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
+  AND middlename LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
+  OR lastname LIKE "%'.str_replace(' ', '%', $_POST['query']).'%"
+  OR position LIKE "%'.str_replace(' ', '%', $_POST['query']).'%"  
   ';
 }
 
@@ -106,14 +116,14 @@ $total_filter_data = $statement->rowCount();
 $output = '
 <table class="table sticky">
   <tr>
-    <th hidden>ID</th>
-    <th>Position</th>
-    <th>First Name</th>
-    <th>Middle Initial</th>
-    <th>Last Name</th>
-    
-    <th>Update</th>
-    <th>Remove</th>
+    <th class="text-center" hidden>ID</th>
+    <th class="text-center">Image</th>
+    <th class="text-center">Position</th>
+    <th class="text-center">First Name</th>
+    <th class="text-center">Middle Initial</th>
+    <th class="text-center">Last Name</th>
+    <th class="text-center">Update</th>
+    <th class="text-center">Remove</th>
   </tr>
 ';
 if($total_data > 0)
@@ -122,14 +132,14 @@ if($total_data > 0)
   {
     $output .= '
     <tr> 
-      <td hidden>'.$row["official_id"].'</td>
-      <td>'.$row["position"].'</td>
-      <td>'.$row["firstname"].'</td>
-      <td>'.$row["middlename"].'</td>
-      <td>'.$row["lastname"].'</td>
-
-      <td>'.'<button type="button" style="width:100%;" class="btn editbtn"><i class="fas fa-user-edit"></i></button>'.'</td>
-      <td>'.'<button type="button" style="width:100%;" class="btn deletebtn"><i class="fas fa-trash"></i></button>'.'</td>
+      <td class="text-center" hidden>'.$row["official_id"].'</td>
+      <td class="text-center" class="text-center">'."<img class='userinfo idbtn' src='data:image/jpeg;base64,".base64_encode($row['image'])."'width=50px height=50px alt='IMAGE' />".'</td>
+      <td class="text-center">'.$row["position"].'</td>
+      <td class="text-center">'.$row["firstname"].'</td>
+      <td class="text-center">'.$row["middlename"].'</td>
+      <td class="text-center">'.$row["lastname"].'</td>
+      <td class="text-center">'.'<button type="button" style="width:100%;" class="btn editbtn"><i class="fas fa-user-edit"></i></button>'.'</td>
+      <td class="text-center">'.'<button type="button" style="width:100%;" class="btn deletebtn"><i class="fas fa-trash"></i></button>'.'</td>
     </tr>
     ';
   }
@@ -138,7 +148,7 @@ else
 {
   $output .= '
   <tr>
-    <td colspan="6" align="center">No Data Found</td>
+    <td colspan="7" align="center">No Data Found</td>
   </tr>
   ';
 }
@@ -146,7 +156,7 @@ else
 $output .= '
 </table>
 <br />
-<div align="center">
+<div align="center" style="float:right;">
   <ul class="pagination">
 ';
 
@@ -259,7 +269,7 @@ for($count = 0; $count < count($page_array); $count++)
 }
 
 $output .= $previous_link .'<li class="page-item">
-<p class="page-link" style="pointer-events: none; cursor: default;">'.$page.'</p>
+<p class="page-link" style="pointer-events: none; cursor: default;color:#27329b;"><b>Page '.$page.'</b></p>
 </li>' . $next_link;
 $output .= '
   </ul>

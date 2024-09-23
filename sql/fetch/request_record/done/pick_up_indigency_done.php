@@ -1,107 +1,16 @@
-
+<style>
+  .table {
+  overflow: hidden;
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.1);;
+}
+</style>
 <html>
-
-
-
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function () {
-
-            $('.editbtn').on('click', function () {
-
-                $('#editmodal').modal('show');
-
-                $tr = $(this).closest('tr');
-
-                var data = $tr.children("td").map(function () {
-                    return $(this).text();
-                }).get();
-
-                console.log(data);
-                $('#req_id').val(data[0]);
-                $('#tracking_id').val(data[1]);
-                $('#req_date').val(data[2]);
-                $('#fullname').val(data[3]);    
-                $('#request_type').val(data[4]);
-                $('#purpose').val(data[5]);
-                $('#date_open').val(data[6]);
-                $('#date_close').val(data[7]);
-                $('#get_date').val(data[8]);
-                $('#payment_method').val(data[9]);
-                $('#reference_no').val(data[10]);
-                $('#amount').val(data[11]);
-                $('#date_paid').val(data[12]);
-                $('#payment_status').val(data[13]);
-                $('#request_status').val(data[14]);
-                $('#username').val(data[15]);
-            });
-        });
-    </script>  
-  <script>
-        $(document).ready(function () {
-
-            $('.deletebtn').on('click', function () {
-
-                $('#deletemodal').modal('show');
- 
-                $tr = $(this).closest('tr');
-
-                var data = $tr.children("td").map(function () {
-                    return $(this).text();
-                }).get();
-
-                console.log(data);
-
-                $('#delete_id1').val(data[0]);
-                $('#req_id1').val(data[0]);
-                $('#tracking_id1').val(data[1]);
-                $('#req_date1').val(data[2]);
-                $('#fullname1').val(data[3]);    
-                $('#request_type1').val(data[4]);
-                $('#purpose1').val(data[5]);
-                $('#date_open1').val(data[6]);
-                $('#date_close1').val(data[7]);
-                $('#get_date1').val(data[8]);
-                $('#payment_method1').val(data[9]);
-                $('#reference_no1').val(data[10]);
-                $('#amount1').val(data[11]);
-                $('#date_paid1').val(data[12]);
-                $('#payment_status1').val(data[13]);
-                $('#request_status1').val(data[14]);
-                $('#username1').val(data[15]);
-
-            });
-        });
-  </script>
-
-<script>
-        $(document).ready(function(){
-        $("#myInput").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
-            $("#myTable tr").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
-        });
-        });
-    </script>
-    <script>
-        $(document).ready(function(){
-        $("#myInput1").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
-            $("#myTable tr").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
-        });
-        });
-    </script>
 </html>
-
-
-
 <?php
-
-
-$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
+$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
 
 $page_array=array(); 
 $limit = '5';
@@ -146,23 +55,23 @@ $output = '
 <table class="table sticky">
   <thead>
   <tr>
-      <th hidden>Request ID</th>
-      <th>Tracking Id</th>
-      <th hidden>Request Date</th>
-      <th>Full name</th>
-      <th hidden>request type</th>
-      <th>Purpose</th>
-      <th hidden>close</th>
-      <th hidden>open</th>
-      <th>Get Day</th>
-      <th hidden>Payment Method</th>
-      <th hidden>Reference No</th>
-      <th hidden>Amount</th>
-      <th hidden>Date Paid</th>
-      <th hidden>Payment Status</th>
-      <th>Request Status</th>
-      <th hidden>username</th>
-      <th>Reciept</th>
+      <th class="text-center" hidden>Request ID</th>
+      <th class="text-center">Tracking Id</th>
+      <th class="text-center" hidden>Request Date</th>
+      <th class="text-center">Full name</th>
+      <th class="text-center" hidden>request type</th>
+      <th class="text-center">Purpose</th>
+      <th class="text-center" hidden>close</th>
+      <th class="text-center" hidden>open</th>
+      <th class="text-center">Get Day</th>
+      <th class="text-center" hidden>Payment Method</th>
+      <th class="text-center" hidden>Reference No</th>
+      <th class="text-center" hidden>Amount</th>
+      <th class="text-center" hidden>Date Paid</th>
+      <th class="text-center" hidden>Payment Status</th>
+      <th class="text-center">Request Status</th>
+      <th class="text-center" hidden>username</th>
+
     </tr>
   </thead>
 ';
@@ -173,23 +82,23 @@ if($total_data > 0)
     $output .= '
     <tbody id="myTable">
       <tr>
-        <td hidden>'.$row["req_id"].'</td>
-        <td>'.$row["tracking_id"].'</td>
-        <td hidden>'.$row["req_date"].'</td>
-        <td>'.$row["fullname"].'</td>
-        <td hidden>'.$row["request_type"].'</td>
-        <td>'.$row["purpose"].'</td>
-        <td hidden>'.$row["date_open"].'</td>
-        <td hidden>'.$row["date_close"].'</td>
-        <td>'.$row["get_date"].'</td>
-        <td hidden>'.$row["payment_method"].'</td>
-        <td hidden>'.$row["reference_no"].'</td>
-        <td hidden>'.$row["amount"].'</td>
-        <td hidden>'.$row["date_paid"].'</td>
-        <td hidden>'.$row["payment_status"].'</td>
-        <td>'.$row["request_status"].'</td>
-        <td hidden>'.$row["username"].'</td>
-        <td>'."<a href='../../print_invoice.php?pdf=1&id=".$row['req_id']."' target='_blank'>PDF</a>".'</td>
+        <td class="text-center" hidden>'.$row["req_id"].'</td>
+        <td class="text-center">'.$row["tracking_id"].'</td>
+        <td class="text-center" hidden>'.$row["req_date"].'</td>
+        <td class="text-center">'.$row["fullname"].'</td>
+        <td class="text-center" hidden>'.$row["request_type"].'</td>
+        <td class="text-center">'.$row["purpose"].'</td>
+        <td class="text-center" hidden>'.$row["date_open"].'</td>
+        <td class="text-center" hidden>'.$row["date_close"].'</td>
+        <td class="text-center">'.date("F d, Y - l", strtotime($row["get_date"])).'</td>
+        <td class="text-center" hidden>'.$row["payment_method"].'</td>
+        <td class="text-center" hidden>'.$row["reference_no"].'</td>
+        <td class="text-center" hidden>'.$row["amount"].'</td>
+        <td class="text-center" hidden>'.$row["date_paid"].'</td>
+        <td class="text-center" hidden>'.$row["payment_status"].'</td>
+        <td class="text-center">'.$row["request_status"].'</td>
+        <td class="text-center" hidden>'.$row["email"].'</td>
+        
       </tr>
     </tbody>
     ';
@@ -207,7 +116,7 @@ else
 $output .= '
 </table>
 <br />
-<div align="center">
+<div align="center" style="float:right;">
   <ul class="pagination">
 ';
 
@@ -321,7 +230,7 @@ for($count = 0; $count < count($page_array); $count++)
 }
 
 $output .= $previous_link  .'<li class="page-item">
-<p class="page-link" style="pointer-events: none; cursor: default;">'.$page.'</p>
+<p class="page-link" style="pointer-events: none; cursor: default;color:#27329b;"><b>Page '.$page.'</b></p>
 </li>'
 . $next_link;
 $output .= '

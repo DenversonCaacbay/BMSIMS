@@ -1,6 +1,114 @@
 <?php
-require '../sql/auth/account_check.php';
-                           
+require '../sql/auth/account_staff_check.php';
+
+// Database connection details
+$servername = "localhost";
+$username = "u622464203_bmsims";
+$password = "Bmsims2023";
+$dbname = "u622464203_bmsims";
+
+// Create a connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch data from the database
+$sql = "SELECT request_type, amount FROM tbl_invoice";
+$result = $conn->query($sql);
+
+// Prepare data for the pie chart
+$data = array();
+while ($row = $result->fetch_assoc()) {
+    $data[] = array(
+        'request_type' => $row['request_type'],
+        'amount' => $row['amount']
+    );
+}
+
+// Close the database connection
+$conn->close();
+?>
+
+<?php
+$servername = "localhost";
+$username = "u622464203_bmsims";
+$password = "Bmsims2023";
+$dbname = "u622464203_bmsims";
+
+// Create a connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+// Fetch data from tbl_invoice
+$sql = "SELECT request_type, payment_method, amount FROM tbl_invoice";
+$result = $conn->query($sql);
+
+// Create an empty array to store the data
+$data = array();
+
+// Iterate through the result and store the data
+while ($row = $result->fetch_assoc()) {
+    $data[] = $row;
+}
+// Create an empty array to store the total amounts
+$totalAmounts = array();
+
+// Calculate the total amounts for each request type
+foreach ($data as $row) {
+    $requestType = $row['request_type'];
+    $amount = $row['amount'];
+
+    if (!isset($totalAmounts[$requestType])) {
+        $totalAmounts[$requestType] = 0;
+    }
+
+    $totalAmounts[$requestType] += $amount;
+}
+
+// For Pie Chart
+$totalAmountsMethod = array();
+
+// Calculate the total amounts for each payment method
+foreach ($data as $row) {
+    $paymentMethod = $row['payment_method'];
+    $amount = $row['amount'];
+
+    if (!isset($totalAmountsMethod[$paymentMethod])) {
+        $totalAmountsMethod[$paymentMethod] = 0;
+    }
+
+    $totalAmountsMethod[$paymentMethod] += $amount;
+}
+
+
+?>
+
+<?php
+$host = 'localhost';
+$db = 'u622464203_bmsims';
+$user = 'u622464203_bmsims';
+$pass = 'Bmsims2023';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // echo "Connected to database successfully!";
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?>
+
+<?php
+    $query = "SELECT * FROM tbl_request WHERE request_status = 'Pending'";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,6 +123,9 @@ require '../sql/auth/account_check.php';
       integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc"
       crossorigin="anonymous"/>
       <link rel="stylesheet" href="../bootstrap/css/staff_style.css">
+      <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+      <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script> -->
 </head>
 <body>
  
@@ -50,14 +161,18 @@ require '../sql/auth/account_check.php';
       <a href="menu.php" class="nav-link text-light">
       <i class="fas fa-folder  mr-3 text-light fa-fw" style="font-size:20px"></i>
                 List of Records
+                <?php if (!empty($entries)): ?>
+                <i class="fas fa-exclamation-circle" style="margin-left:50px;font-size:18px;color: #fff;"></i> <!-- Red dot or any other indicator -->
+            <?php endif; ?>
             </a>
 </li>
     <!---->
 
-    <li class="nav-item" style="margin-top:55vh">
-    <a href="../sql/auth/staff_account_logout.php" class="nav-link nav-link1 text-light">
-      <i class="fas fa-sign-out-alt mr-3 text-light fa-fw" style="font-size:20px"></i>
-                Logout
+    <li class="nav-item text-center mb-4" style="position:fixed;bottom:0;margin-left:6%;">
+    <a href="../sql/auth/staff_account_logout.php" class="nav-link nav-link1 text-center text-light">
+    <!--<img width="30" height="30" src="https://img.icons8.com/ios/50/FFFFFF/logout-rounded-left.png" alt="logout-rounded-left"/>-->
+     <img width="30" height="30" src="../images/icons/logout_button_white.png" alt="logout-rounded-left"/>
+               
             </a>
     </li>
   </ul>
@@ -71,7 +186,7 @@ require '../sql/auth/account_check.php';
   <div class="row nav1 mb-1">
 
     <div class="col-8">
-        <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button>
+        <!-- <button id="sidebarCollapse" type="button" class="btn btn-menu shadow-sm"><i class="fa fa-bars"></i></button> -->
     </div>
     <div class="col-4 mt-2 align-items-right">
         <div class="d-flex top-header ">
@@ -110,29 +225,45 @@ require '../sql/auth/account_check.php';
       <div class="col-12">
         <div class="container">
           <div class="row g-4 align-items-start">
-            <div class="col-md-4">
-              <div class="card card-dash">
-                <div class="col-sm-12">
-                  <div class="card-header"><h5>Total Request</h5></div>
-                    <div class="card-body">
-                      <?php 
-                        $showProducts = "SELECT * FROM tbl_request ";
-                        $statement = $pdo->query($showProducts);
-                        $products = $statement->fetchAll(PDO::FETCH_ASSOC);
-                        $all = $statement->rowCount();
-                        echo "<h5 class='mb-2'>".$all."</h5>";
-                      ?>
+            <div class="col-md-3">
+                <div class="card card-dash">
+                  <div class="col-sm-12">
+                    <div class="card-header"><h5>All Pending Request</h5></div>
+                      <div class="card-body">
+                        <?php 
+                          $showProducts = "SELECT * FROM tbl_request WHERE request_status='Pending'";
+                          $statement = $pdo->query($showProducts);
+                          $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+                          $all = $statement->rowCount();
+                          echo "<h5 class='mb-2'>".$all."</h5>";
+                        ?>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-md-4">
+                <div class="col-md-3">
+                  <div class="card card-dash">
+                    <div class="col-sm-12">
+                      <div class="card-header"><h5>Total Released Request</h5></div>
+                        <div class="card-body">
+                          <?php 
+                            $showProducts = "SELECT * FROM tbl_invoice WHERE request_status='Get Record'";
+                            $statement = $pdo->query($showProducts);
+                            $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+                            $all = $statement->rowCount();
+                            echo "<h5 class='mb-2'>".$all."</h5>";
+                          ?>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              <div class="col-md-3">
                 <div class="card card-dash">
                   <div class="col-sm-12">
                     <div class="card-header"><h5>Total Resident</h5></div>
                     <div class="card-body">
                       <?php 
-                        $showProducts = "SELECT * FROM tbl_resident";
+                        $showProducts = "SELECT * FROM resident_accounts WHERE access='Approved'";
                         $statement = $pdo->query($showProducts);
                         $products = $statement->fetchAll(PDO::FETCH_ASSOC);
                         $all = $statement->rowCount();
@@ -142,7 +273,7 @@ require '../sql/auth/account_check.php';
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="card card-dash ">
                   <div class="col-sm-12">
                     <div class="card-header"><h5>Total Earnings</h5></div>
@@ -168,28 +299,33 @@ require '../sql/auth/account_check.php';
       </div>
     </div>
   </div>
-
   <div class="header">
-            <div class="card-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-12" style="font-size:2rem">
-                        Barangay Official <i class="fas fa-user  mr-3 fa-fw"></i>
-                        </div>
+        <div class="card-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10" style="margin-top:8px">
+                        <b>Recent</b>
                     </div>
                 </div>
-                <hr class="mt-2" style="margin:10px">
             </div>
         </div>
-        <div class="container mt-2">
-            <div class="table-responsive" style="height:350px" id="dynamic_content">
-                        <!--Sample-->
-                            
-                        <!--End of Sample-->
-            </div>
+    </div>
+  <div class="container p-3">
+    <div class="table-responsive" style="height:400px" id="dynamic_content">
+                                <!--Sample-->
+                                    
+                                <!--End of Sample-->
+    </div>
+</div>
+          
+          
+            
+            
+                        
         </div>
 
-
+        <!-- <canvas id="wholeTotal"></canvas>
+        <canvas id="methodTotal"></canvas> -->
 
 
 <!-- End demo content -->
@@ -253,7 +389,7 @@ require '../sql/auth/account_check.php';
     function load_data(page, query = '')
     {
       $.ajax({
-        url:"../sql/fetch/info/fetch_dashboard.php",
+        url:"../sql/account_admin/fetch_admin_dashboard.php",
         method:"POST",
         data:{page:page, query:query},
         success:function(data)

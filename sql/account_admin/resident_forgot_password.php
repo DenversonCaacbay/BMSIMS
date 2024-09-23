@@ -11,38 +11,38 @@
         'password' => 'zzz',
     ];
 
-    $sql = "UPDATE tbl_resident SET password= :password WHERE firstname = :firstname";
-    $sql2 = 'INSERT INTO tbl_logs_resident(firstname,lastname, admin_power) VALUES ( :firstname,:lastname ,:admin_power)';
+    $sql = "UPDATE resident_accounts SET password= :password WHERE fname = :fname";
+    // $sql2 = 'INSERT INTO tbl_logs_resident(firstname,lastname, admin_power) VALUES ( :firstname,:lastname ,:admin_power)';
  
     $statement = $pdo->prepare($sql);
 
-    $statement->bindParam(':firstname', $data['firstname']);
+    $statement->bindParam(':fname', $data['fname']);
     $statement->bindParam(':password', $data['password']);
 
     //change
-    $data['firstname'] = $_POST['firstname'];
+    $data['fname'] = $_POST['fname'];
     $data['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    $statement2 = $pdo->prepare($sql2);
+    // $statement2 = $pdo->prepare($sql2);
 
-    $newProd2 = [
-        'firstname' => 'zzz',
-        'lastname' => 'zzz',
-        'admin_power' => 'zzz',
-    ];
+    // $newProd2 = [
+    //     'firstname' => 'zzz',
+    //     'lastname' => 'zzz',
+    //     'admin_power' => 'zzz',
+    // ];
 
 
-    $statement2->bindParam(':firstname', $newProd2['firstname']);
-    $statement2->bindParam(':lastname', $newProd2['lastname']);
-    $statement2->bindParam(':admin_power', $newProd2['admin_power']);
+    // $statement2->bindParam(':firstname', $newProd2['firstname']);
+    // $statement2->bindParam(':lastname', $newProd2['lastname']);
+    // $statement2->bindParam(':admin_power', $newProd2['admin_power']);
 
-    //change
+    // //change
 
-    $newProd2['firstname'] = $_POST['firstname'];
-    $newProd2['lastname'] = $_POST['lastname'];
-    $newProd2['admin_power'] = $_POST['admin_power'];
+    // $newProd2['firstname'] = $_POST['firstname'];
+    // $newProd2['lastname'] = $_POST['lastname'];
+    // $newProd2['admin_power'] = $_POST['admin_power'];
 
-            if($statement->execute() && $statement2->execute()){
+            if($statement->execute()){
                 echo'
                         <script type="text/javascript">
     
@@ -51,11 +51,11 @@
                         swal({
                             position: "top-end",
                             type: "success",
-                            title: "Update Successfully",
+                            title: "Password Update Successfully",
                             showConfirmButton: false,
                             timer: 1500
                         }, function(){
-                            window.location.href="../../admin/resident_accounts.php";
+                            window.location.href="../../admin/approved_accounts.php";
                         })
                         });
                         

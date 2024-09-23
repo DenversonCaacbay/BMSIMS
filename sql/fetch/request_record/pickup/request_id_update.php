@@ -30,7 +30,7 @@
     //change
     $data['req_id'] = $_POST['req_id'];
     $data['amount'] = $_POST['amount'];
-    if($_POST['payment_status'] == 'Not Paid')
+    if($_POST['payment_status'] == 'Pending')
     {
         $_POST['date_paid'] = "None";
     }

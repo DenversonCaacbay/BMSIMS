@@ -1,6 +1,36 @@
 <?php
-require '../sql/auth/account_user_check.php';                       
+session_start(); // Start the session
+// session_destroy();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Redirect the user to user_index.php
+    header("Location: user_index.php");
+    exit;
+}                   
 ?>
+<?php
+                            $pdo = require '../sql/config/connection.php';
+                            $displayform = false;
+                            $displaylogin = false;
+
+                            $sqlAdmin = "SELECT * FROM feedbacks";
+                            $statement = $pdo->query($sqlAdmin);
+                            $admin = $statement->fetchAll(PDO::FETCH_ASSOC);
+                            $admin_count = $statement->rowCount();
+
+                            if ($admin_count < 1) {
+                                $displayform = true;
+                            } else {
+                                $displaylogin = true;
+                            }
+
+                            // Check if there is an email in the feedbacks table
+                            foreach ($admin as $row) {
+                                if (!empty($row['email'])) {
+                                    $displayform = false;
+                                    break;
+                                }
+                            }
+                            ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,7 +59,7 @@ require '../sql/auth/account_user_check.php';
 <nav class="navbar navbar-expand-lg py-3 sticky-top navbar-dark">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <img src="../images/BarangayLogo.png" height="30" class="d-inline-block align-text-top" style="border-radius:30px;">
+            <img src="../images/barangaylogo.png" height="30" class="d-inline-block align-text-top" style="border-radius:30px;">
             Barangay Matain SIMS
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -56,94 +86,85 @@ require '../sql/auth/account_user_check.php';
   </nav><!-- //NAVBAR -->
 
     <!-- Edit Profile Modal -->
-    <div class="modal fade" id="profilemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="profilemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel"> Edit Profile </h5>
                     <button type="button" class="btn btn-cancel" data-dismiss="modal"> X </button>
                 </div>
-                <div class="card">
-                <form action="../sql/user_requests/resident_update.php" method="POST">
-                                    <?php 
-                                        $pdo = require '../sql/config/connection.php';
-                                        $user = $_SESSION['user_id'];
-
-                                        $secret1 = '';
-                                        $secret2 = '';
-                                        $secret3 = '';
-                                        $recovery_code = '';
-
-                                        $userSearch = "SELECT * FROM tbl_resident WHERE acc_id=".$user;
-                                        $statement = $pdo->query($userSearch);
-                                        $userInfo = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-                                        foreach($userInfo as $info){
-    
-                                            echo "<div class='row'>";
-                                            echo "<div class='col-md-12' hidden>";
-                                            echo "<h5 class='form-label'>Username</h5>";
-                                            echo "<input type='text' value='".$info['username']."' name='username' class='form-control' placeholder='' disabled>";
-                                            echo "</div>";
-                                            echo "<div class='col-md-4 mt-3'>";
-                                            echo "<h5 class='form-label'>First Name</h5>";
-                                            echo "<input type='text' value='".$info['firstname']."' name='firstname' class='form-control' placeholder='' required>";
-                                            echo "</div>";
-                                            echo "<div class='col-md-4 mt-3'>";
-                                            echo "<h5 class='form-label'>Middle Name</h5>";
-                                            echo "<input type='text' value='".$info['middlename']."' name='middlename' class='form-control' placeholder='' required>";
-                                            echo "</div>";
-                                            echo "<div class='col-md-4 mt-3'>";
-                                            echo "<h5 class='form-label'>Last Name</h5>";
-                                            echo "<input type='text' value='".$info['lastname']."' name='lastname' class='form-control' placeholder='' required>";
-                                            echo "</div>";
-                                            echo "<div class='col-md-3 mt-3'>";
-                                            echo "<h5 class='form-label'>Gender</h5>";
-                                            echo "<input type='text' value='".$info['gender']."' name='gender' class='form-control' placeholder='' readonly>";
-                                            echo "</div>";
-                                            echo "<div class='col-md-3 mt-3'>";
-                                            echo "<h5 class='form-label'>Place of Birth</h5>";
-                                            echo "<input type='text' value='".$info['place_of_birth']."' name='place_of_birth' class='form-control' placeholder='' readonly>";
-                                            echo "</div>";
-                                            echo "<div class='col-md-3 mt-3'>";
-                                            echo "<h5 class='form-label'>Birthdate</h5>";
-                                            echo "<input type='text' value='".$info['bdate']."' name='bdate' class='form-control' placeholder='' readonly>";
-                                            echo "</div>";
-                                            echo "<div class='col-md-3 mt-3'>";
-                                            echo "<h5 class='form-label'>Civil Status</h5>";
-                                            echo "<input type='text' value='".$info['civil_status']."' name='civil_status' class='form-control' placeholder='' required>";
-                                            echo "</div>"; 
-                                            echo "<div class='col-md-6 mt-3'>";
-                                            echo "<h5 class='form-label'>Address</h5>";
-                                            echo "<input type='text' value='".$info['address']."' name='address' class='form-control' placeholder='' required>";
-                                            echo "</div>"; 
-                                            echo "<div class='col-md-6 mt-3'>";
-                                            echo "<h5 class='form-label'>Purok</h5>";
-                                            echo "<input type='text' value='".$info['purok']."' name='purok' class='form-control' placeholder='' required>";
-                                            echo "</div>";
-                                            echo "<div class='col-md-6 mt-3'>";
-                                            echo "<h5 class='form-label'>Email</h5>";
-                                            echo "<input type='text' value='".$info['email']."' name='email' class='form-control' placeholder='' required>";
-                                            echo "</div>";
-                                            echo "<div class='col-md-6 mt-3'>";
-                                            echo "<h5 class='form-label'>Contact Number</h5>";
-                                            echo "<input type='number' value='".$info['phone']."' name='phone' class='form-control' placeholder='' required>";
-                                            echo "</div>";
-
-                                            echo "</div>";
-                                            //echo br
-                                            echo "<br>";
-                                            ;
-                                        
-                                       
-                                    ?>
-                                    <input type="submit" style="width:100%;" class="btn btn-custom" value="Save Changes">
-                                    </form>
-                </div>
-
-                   
-
+                <form action="../sql/user_requests/resident_update.php" class="p-3" method="POST">
+                    <?php 
+                        // $pdo = require '../sql/config/connection.php';
+                        $user = $_SESSION['user_id'];
+                        $secret1 = '';
+                        $secret2 = '';
+                        $secret3 = '';
+                        $recovery_code = '';
+                        $userSearch = "SELECT * FROM resident_accounts WHERE res_id=".$user;
+                        $statement = $pdo->query($userSearch);
+                        $userInfo = $statement->fetchAll(PDO::FETCH_ASSOC);
+                        foreach($userInfo as $info){
+                            echo "<div class='row'>";
+                            echo "<div class='col-md-4'>";
+                            echo "<h5 class='form-label'>First Name</h5>";
+                            echo "<input type='text' value='".$info['fname']."' name='fname' class='form-control' placeholder='' readonly>";
+                            echo "</div>";
+                            echo "<div class='col-md-4'>";
+                            echo "<h5 class='form-label'>Middle Name</h5>";
+                            echo "<input type='text' value='".$info['mname']."' name='mname' class='form-control' placeholder='' readonly>";
+                            echo "</div>";
+                            echo "<div class='col-md-4'>";
+                            echo "<h5 class='form-label'>Last Name</h5>";
+                            echo "<input type='text' value='".$info['lname']."' name='lname' class='form-control' placeholder='' readonly>";
+                            echo "</div>";
+                            echo "<div class='col-md-3 mt-3'>";
+                            echo "<h5 class='form-label'>Sex</h5>";
+                            echo "<input type='text' value='".$info['gender']."' name='gender' class='form-control' placeholder='' readonly>";
+                            echo "</div>";
+                            echo "<div class='col-md-3 mt-3'>";
+                            echo "<h5 class='form-label'>Place of Birth</h5>";
+                            echo "<input type='text' value='".$info['pob']."' name='pob' class='form-control' placeholder='' readonly>";
+                            echo "</div>";
+                            echo "<div class='col-md-3 mt-3'>";
+                            echo "<h5 class='form-label'>Birthdate</h5>";
+                            echo "<input type='text' value='".date("F d, Y", strtotime($info["bdate"]))."'  name='bdate' class='form-control' placeholder='' readonly>";
+                            echo "</div>"; 
+                            echo "<div class='col-md-3 mt-3'>";
+                            echo "<h5 class='form-label'>Age</h5>";
+                            echo "<input type='text' value='".$info['age']."' name='age' class='form-control' placeholder='' readonly>";
+                            echo "</div>";
+                            echo "<div class='col-md-4 mt-3'>";
+                            echo "<h5 class='form-label'>Civil Status</h5>";
+                            echo "<input type='text' value='".$info['status']."' name='status' class='form-control' placeholder='' required>";
+                            echo "</div>"; 
+                            echo "<div class='col-md-4 mt-3'>";
+                            echo "<h5 class='form-label'>Street</h5>";
+                            echo "<input type='text' value='".$info['street']."' name='street' class='form-control' placeholder='' required>";
+                            echo "</div>"; 
+                            echo "<div class='col-md-4 mt-3'>";
+                            echo "<h5 class='form-label'>Purok</h5>";
+                            echo "<input type='text' value='".$info['purok']."' name='purok' class='form-control' placeholder='' required>";
+                            echo "</div>";
+                            echo "<div class='col-md-6 mt-3'>";
+                            echo "<h5 class='form-label'>Email</h5>";
+                            echo "<input type='text' value='".$info['email']."' name='email' class='form-control' placeholder='' readonly>";
+                            echo "</div>";
+                            echo "<div class='col-md-6 mt-3'>";
+                            echo "<h5 class='form-label'>Contact Number</h5>";
+                            echo "<input type='number' value='".$info['contact']."' name='contact' class='form-control' placeholder='' required>";
+                            echo "</div>";
+                            echo "</div>";
+                            //echo br
+                            echo "<br>";
+                            ;
+                    ?>
+                    <div class="mt-2">
+                      <label for="myCheckbox">Click Here to Read <a href="../general_policy.html" target="_blank">BMSIMS General Privacy Policy</a></label>
+                      <input type="checkbox" id="myCheckbox">
+                    </div>
+                    <input type="submit" id="submitButton" style="width:100%;" class="btn btn-custom" value="Save Changes" disabled>
+                </form>
             </div>
         </div>
     </div>
@@ -154,12 +175,12 @@ require '../sql/auth/account_user_check.php';
                 <h3 class="title text-lg-start">Profile</h3>
                 <hr>
                 <div class="row">
-                    <div class="col-4 prof1">
+                    <div class="col-5 prof1">
                         <?php
                             echo"
                             <div class='row'>
-                                <div class='col-4 pic'><img class='rounded-circle' src='data:image/jpeg;base64,".base64_encode($info['profile_pic'])."'width=100px height=100px/></div>
-                                <div class='col-8 user'><h5 class='mt-4'>".$info['username']."</h5></div>
+                                <div class='col-3 pic'><img class='rounded-circle' src='data:image/jpeg;base64,".base64_encode($info['pic'])."'width=100px height=100px/></div>
+                                <div class='col-9 user'><h5 class='mt-4'>".$info['fname']." ".$info['mname']." ".$info['lname']."</h5></div>
                             </div>
                             
                             
@@ -168,19 +189,24 @@ require '../sql/auth/account_user_check.php';
                         ?>
                         <button class="btn btn-custom" data-toggle="modal" data-target="#profilemodal">Edit Profile</button>
                         <button class="btn btn-custom" data-toggle="modal" data-target="#passmodal">Change Password</button>
+                        
+                        <?php if ($displayform): ?>
+                            <button class="btn btn-custom" data-toggle="modal" data-target="#feedmodal">Feedback</button>
+                        <?php endif; ?>
+                        
                     </div>
                     
-                   <div class="col-8 info">
+                   <div class="col-7 info">
                    <?php 
     
                     echo "<div class='row'>";
                     echo "<div class='col-md-12  mt-3'>";
                     echo "<h5 class='form-label'>First Name</h5>";
-                    echo "<input type='text' value='".$info['firstname']." ".$info['middlename']." ".$info['lastname']."' name='firstname' class='form-control' placeholder='' disabled>";
+                    echo "<input type='text' value='".$info['fname']." ".$info['mname']." ".$info['lname']."' name='firstname' class='form-control' placeholder='' disabled>";
                     echo "</div>";
                     echo "<div class='col-md-12 mt-3'>";
-                    echo "<h5 class='form-label'>Address</h5>";
-                    echo "<input type='text' value='".$info['address']."' name='address' class='form-control' placeholder='' disabled>";
+                    echo "<h5 class='form-label'>Street</h5>";
+                    echo "<input type='text' value='".$info['street']."' name='address' class='form-control' placeholder='' disabled>";
                     echo "</div>"; 
                     echo "<div class='col-md-12 mt-3'>";
                     echo "<h5 class='form-label'>Purok</h5>";
@@ -192,7 +218,7 @@ require '../sql/auth/account_user_check.php';
                     echo "</div>";
                     echo "<div class='col-md-12 mt-3'>";
                     echo "<h5 class='form-label'>Contact Number</h5>";
-                    echo "<input type='number' value='".$info['phone']."' name='phone' class='form-control' placeholder='' disabled>";
+                    echo "<input type='number' value='".$info['contact']."' name='phone' class='form-control' placeholder='' disabled>";
                     echo "</div>";
 
                     echo "</div>";
@@ -217,11 +243,10 @@ require '../sql/auth/account_user_check.php';
                         <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
                         <button type="button" class="btn btn-cancel" data-dismiss="modal"> X </button>
                     </div>
-                    <div class="card">
                     <?php
                         $user = $_SESSION['user_id'];
                         ?>
-                        <form action="../sql/auth/user_account_change_password.php"  method="POST">
+                        <form action="../sql/auth/user_account_change_password.php" class="p-3" method="POST">
                             <div class="col-md-12 mb-3 password-container">
                                 <label>Enter Old Password</label>
                                 <input type="password" name="oldPass" class="form-control" id="password1" placeholder="" required>
@@ -238,6 +263,28 @@ require '../sql/auth/account_user_check.php';
                                 <i class="fas fa-eye" style="right: 1%;" id="eye3"></i>
                             </div>
                             <input type="submit" style="width:100%;" class="btn btn-custom" value="Change Password">
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="feedmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Feedback</h5>
+                        <button type="button" class="btn btn-cancel" data-dismiss="modal"> X </button>
+                    </div>
+                        <form action="../sql/post/feedback.php" class="p-3" method="POST">
+                            <div class="col-md-12 mb-3 password-container">
+                                <label>Your Feedback</label>
+                                <textarea  type="text" name="feedback" class="form-control" id="feedback" placeholder="" required></textarea>
+                            </div>
+                            <input type="text" name="email" class="form-control" value="<?php echo $_SESSION['email']?>" placeholder="text" id="floatingInput" hidden>
+                            <input type="submit" style="width:100%;" class="btn btn-custom" value="Submit">
 
                         </form>
                     </div>
@@ -310,6 +357,14 @@ require '../sql/auth/account_user_check.php';
 
             });
         });
+  </script>
+  <script>
+    const checkbox = document.getElementById('myCheckbox');
+    const submitButton = document.getElementById('submitButton');
+
+    checkbox.addEventListener('change', function() {
+      submitButton.disabled = !checkbox.checked;
+    });
   </script>
 </body>
 </html>

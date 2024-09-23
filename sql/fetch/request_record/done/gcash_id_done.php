@@ -100,8 +100,7 @@
 <?php
 
 
-$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
-
+$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
 $page_array=array(); 
 $limit = '5';
 $page = 1;
@@ -176,15 +175,15 @@ if($total_data > 0)
       <td hidden>'.$row["purpose"].'</td>
       <td hidden>'.$row["date_open"].'</td>
       <td hidden>'.$row["date_close"].'</td>
-      <td>'.$row["get_date"].'</td>
+      <td>'.date("F d, Y - l", strtotime($row["get_date"])).'</td>
       <td hidden>'.$row["payment_method"].'</td>
       <td hidden>'.$row["reference_no"].'</td>
       <td hidden>'.$row["amount"].'</td>
       <td hidden>'.$row["date_paid"].'</td>
       <td hidden>'.$row["payment_status"].'</td>
       <td>'.$row["request_status"].'</td>
-      <td hidden>'.$row["username"].'</td>
-      <td>'."<a href='../../print_invoice.php?pdf=1&id=".$row['req_id']."' target='_blank'>PDF</a>".'</td>
+      <td hidden>'.$row["email"].'</td> 
+      <td class="text-center">'."<a href='../../print_invoice.php?pdf=1&id=".$row['req_id']."' target='_blank'><i class='fas fa-file-invoice'></i></a>".'</td>
     </tr>
     ';
   }
@@ -201,7 +200,7 @@ else
 $output .= '
 </table>
 <br />
-<div align="center">
+<div align="center" style="float:right">
   <ul class="pagination">
 ';
 
@@ -315,7 +314,7 @@ for($count = 0; $count < count($page_array); $count++)
 }
 
 $output .= $previous_link .'<li class="page-item">
-<p class="page-link" style="pointer-events: none; cursor: default;">'.$page.'</p>
+<p class="page-link" style="pointer-events: none; cursor: default;color:#27329b;"><b>Page '.$page.'</b></p>
 </li>'
 . $next_link;
 $output .= '

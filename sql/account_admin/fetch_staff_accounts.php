@@ -1,5 +1,11 @@
 
 <style>
+  .table{
+  overflow: hidden;
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.1);;
+  }
   .password-container{
   position: relative;
 }
@@ -104,7 +110,7 @@
 <?php
 
 
-$connect = new PDO("mysql:host=localhost; dbname=bmsims", "root", "");
+$connect = new PDO("mysql:host=localhost; dbname=u622464203_bmsims", "u622464203_bmsims", "Bmsims2023");
 
 $page_array=array(); 
 $limit = '5';
@@ -147,13 +153,12 @@ $output = '
 <p></p>
 <table class="table">
   <tr>
-    <th hidden>ID</th>
-
-    <th>Username</th>
-    <th>Full Name</th>
-    <th hidden>Password</th>
-    <th>Update Password</th>
-    <th>Remove</th>
+    <th class="text-center" hidden>ID</th>
+    <th class="text-center">Username</th>
+    <th class="text-center">Full Name</th>
+    <th class="text-center" hidden>Password</th>
+    <th class="text-center">Update Password</th>
+    <th class="text-center">Remove</th>
   </tr>
 ';
 
@@ -164,19 +169,20 @@ if($total_data > 0)
   {
     $output .= '
     <tr>
-      <td hidden>'.$row["acc_id"].'</td>
-      <td>'.$row["username"].'</td>
-      <td>'.$row["fullname"].'</td>
-      <td hidden>'.$row["password"].'</td>
-
-       
-     
-     
-      <td>'.'<button type="button" style="width:100%;" class="btn editbtn"><i class="fas fa-user-edit"></i></button>'.'</td>
-      <td>'.'<button type="button" style="width:100%;" class="btn deletebtn"><i class="fas fa-trash"></i></button>'.'</td>
-    </tr>
-    </tr>
-    ';
+      <td class="text-center" hidden>'.$row["acc_id"].'</td>
+      <td class="text-center">'.$row["username"].'</td>
+      <td class="text-center">'.$row["fullname"].'</td>
+      <td class="text-center" hidden>'.$row["password"].'</td>
+      <td class="text-center">'.'<button type="button" style="width:auto;" class="btn editbtn"><i class="fas fa-user-edit"></i></button>'.'</td>
+      ';
+      if($row["admin_power"] == '0')
+      {
+        $output.='
+          <td class="text-center">'.'<button type="button" style="width:auto;" class="btn deletebtn"><i class="fas fa-trash"></i></button>'.'</td>
+        </tr>
+        </tr>
+        ';
+      }
   }
 }
 else
